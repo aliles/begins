@@ -9,6 +9,8 @@ setup(
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     author="Aaron Iles",
     author_email="aaron.iles@gmail.com",
+    url="http://github.com/aliles/main",
+    download_url="http://github.com/aliles/main/downloads",
     description="Syntactic sugar for Python's main",
     long_description=open('README.rst').read(),
     license="PSF",
