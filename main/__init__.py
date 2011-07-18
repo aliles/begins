@@ -5,12 +5,13 @@ import inspect
 
 __all__ = ['execute']
 
+
 def execute(func=None):
     """Return True if called in a module that is executed.
 
     Inspects the '__name__' in the stack frame of the caller, comparing it
     to '__main__'. Thus allowing the Python idiom:
-    
+
     >>> if __name__ == '__main__':
     ...     pass
 
