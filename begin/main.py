@@ -3,10 +3,10 @@ import atexit
 import collections
 import inspect
 
-__all__ = ['execute']
+__all__ = ['start']
 
 
-def execute(func=None):
+def start(func=None):
     """Return True if called in a module that is executed.
 
     Inspects the '__name__' in the stack frame of the caller, comparing it
@@ -18,13 +18,13 @@ def execute(func=None):
     To be replace with:
 
     >>> import begin
-    >>> if begin.execute():
+    >>> if begin.start():
     ...    pass
 
     Can also be used as a decorator to register a function to run after the
     module has been loaded.
 
-    >>> @begin.execute
+    >>> @begin.start
     ... def main():
     ...     pass
 
