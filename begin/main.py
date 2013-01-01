@@ -1,4 +1,4 @@
-"Convenience function for a programs 'main'."
+"Syntactic sugar for a programs 'main'."
 import atexit
 import inspect
 

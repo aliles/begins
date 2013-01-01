@@ -1,2 +1,2 @@
-"Convenience function for a programs 'main'."
+"Convenience function for starting Python programs"
 from begin.main import start
