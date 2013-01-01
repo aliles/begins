@@ -17,14 +17,14 @@ def execute(func=None):
 
     To be replace with:
 
-    >>> import main
-    >>> if main.execute():
+    >>> import begin
+    >>> if begin.execute():
     ...    pass
 
     Can also be used as a decorator to register a function to run after the
     module has been loaded.
 
-    >>> @execute
+    >>> @begin.execute
     ... def main():
     ...     pass
 
