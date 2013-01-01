@@ -1,6 +1,5 @@
 "Convenience function for a programs 'main'."
 import atexit
-import collections
 import inspect
 
 __all__ = ['start']
