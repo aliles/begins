@@ -9,5 +9,15 @@ class TestStart(unittest.TestCase):
         # begin.start() return false outside __main__
         self.assertFalse(begin.start())
 
+    def test_start_true(self):
+        # mock globals to mimic __main__
+        try:
+            original = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            self.assertTrue(begin.start())
+        finally:
+            globals()['__name__'] = original
+
+
 if __name__ == '__main__':
     unittest.begin()
