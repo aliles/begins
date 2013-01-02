@@ -1,4 +1,6 @@
 from __future__ import absolute_import, division, print_function
+import atexit
+import mock
 
 try:
     import unittest2 as unittest
@@ -22,6 +24,13 @@ class TestStart(unittest.TestCase):
             self.assertTrue(begin.start())
         finally:
             globals()['__name__'] = original
+
+    @mock.patch('atexit.register')
+    def test_decorate_false(self, register):
+        @begin.start
+        def main():
+            pass
+        self.assertEqual(0, register.call_count)
 
 
 if __name__ == '__main__':
