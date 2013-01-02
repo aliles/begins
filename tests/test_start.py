@@ -32,6 +32,18 @@ class TestStart(unittest.TestCase):
             pass
         self.assertEqual(0, register.call_count)
 
+    @mock.patch('atexit.register')
+    def test_decorate_true(self, register):
+        try:
+            original = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            @begin.start
+            def main():
+                pass
+            self.assertEqual(1, register.call_count)
+        finally:
+            globals()['__name__'] = original
+
 
 if __name__ == '__main__':
     unittest.begin()
