@@ -77,7 +77,7 @@ def signature(obj):
             ba = sig.bind_partial(*partial_args, **partial_keywords)
         except TypeError as ex:
             msg = 'partial object {!r} has incorrect arguments'.format(obj)
-            raise ValueError(msg) from ex
+            raise ValueError(msg)
 
         for arg_name, arg_value in ba.arguments.items():
             param = new_params[arg_name]
@@ -158,9 +158,9 @@ class _empty:
 
 
 class _ParameterKind(int):
-    def __new__(self, *args, name):
+    def __new__(self, *args, **kwargs):
         obj = int.__new__(self, *args)
-        obj._name = name
+        obj._name = kwargs['name']
         return obj
 
     def __str__(self):
@@ -207,7 +207,7 @@ class Parameter:
 
     empty = _empty
 
-    def __init__(self, name, kind, *, default=_empty, annotation=_empty,
+    def __init__(self, name, kind, default=_empty, annotation=_empty,
                  _partial_kwarg=False):
 
         if kind not in (_POSITIONAL_ONLY, _POSITIONAL_OR_KEYWORD,
@@ -252,7 +252,7 @@ class Parameter:
     def kind(self):
         return self._kind
 
-    def replace(self, *, name=_void, kind=_void, annotation=_void,
+    def replace(self, name=_void, kind=_void, annotation=_void,
                 default=_void, _partial_kwarg=_void):
         '''Creates a customized copy of the Parameter.'''
 
@@ -436,7 +436,7 @@ class Signature:
 
     empty = _empty
 
-    def __init__(self, parameters=None, *, return_annotation=_empty,
+    def __init__(self, parameters=None, return_annotation=_empty,
                  __validate_parameters__=True):
         '''Constructs Signature from the given list of Parameter
         objects and 'return_annotation'.  All arguments are optional.
@@ -555,7 +555,7 @@ class Signature:
     def return_annotation(self):
         return self._return_annotation
 
-    def replace(self, *, parameters=_void, return_annotation=_void):
+    def replace(self, parameters=_void, return_annotation=_void):
         '''Creates a customized copy of the Signature.
         Pass 'parameters' and/or 'return_annotation' arguments
         to override them in the new copy.
@@ -603,7 +603,7 @@ class Signature:
     def __ne__(self, other):
         return not self.__eq__(other)
 
-    def _bind(self, args, kwargs, *, partial=False):
+    def _bind(self, args, kwargs, partial=False):
         '''Private method.  Don't use directly.'''
 
         arguments = OrderedDict()
@@ -644,7 +644,7 @@ class Signature:
                             msg = '{arg!r} parameter is positional only, ' \
                                   'but was passed as a keyword'
                             msg = msg.format(arg=param.name)
-                            raise TypeError(msg) from None
+                            raise TypeError(msg)
                         parameters_ex = (param,)
                         break
                     elif (param.kind == _VAR_KEYWORD or
@@ -661,13 +661,13 @@ class Signature:
                         else:
                             msg = '{arg!r} parameter lacking default value'
                             msg = msg.format(arg=param.name)
-                            raise TypeError(msg) from None
+                            raise TypeError(msg)
             else:
                 # We have a positional argument to process
                 try:
                     param = next(parameters)
                 except StopIteration:
-                    raise TypeError('too many positional arguments') from None
+                    raise TypeError('too many positional arguments')
                 else:
                     if param.kind in (_VAR_KEYWORD, _KEYWORD_ONLY):
                         # Looks like we have no parameter for this positional
@@ -717,7 +717,7 @@ class Signature:
                 if (not partial and param.kind != _VAR_POSITIONAL and
                                                     param.default is _empty):
                     raise TypeError('{arg!r} parameter lacking default value'. \
-                                    format(arg=param_name)) from None
+                                    format(arg=param_name))
 
             else:
                 arguments[param_name] = arg_val
