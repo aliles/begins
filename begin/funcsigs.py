@@ -4,6 +4,7 @@ from __future__ import absolute_import, division, print_function
 from collections import OrderedDict
 import itertools
 import functools
+import re
 import types
 
 
@@ -229,7 +230,7 @@ class Parameter:
             self._name = name
         else:
             name = str(name)
-            if kind != _POSITIONAL_ONLY and not name.isidentifier():
+            if kind != _POSITIONAL_ONLY and not re.match(r'[a-z_]\w*$', name, re.I):
                 msg = '{!r} is not a valid parameter name'.format(name)
                 raise ValueError(msg)
             self._name = name
