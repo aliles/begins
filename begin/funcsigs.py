@@ -472,7 +472,7 @@ class Signature:
                 params = OrderedDict(((param.name, param)
                                                 for param in parameters))
 
-        self._parameters = types.MappingProxyType(params)
+        self._parameters = params
         self._return_annotation = return_annotation
 
     @classmethod
@@ -550,7 +550,10 @@ class Signature:
 
     @property
     def parameters(self):
-        return self._parameters
+        if hasattr(types, 'MappingProxyType'):
+            return types.MappingProxyType(self._parameters)
+        else:
+            return OrderedDict(self._parameters.items())
 
     @property
     def return_annotation(self):
