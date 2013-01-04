@@ -24,6 +24,11 @@ class TestSignatureObject(unittest.TestCase):
                 (Ellipsis if sig.return_annotation is sig.empty
                                             else sig.return_annotation))
 
+    def __init__(self, *args, **kwargs):
+        unittest.TestCase.__init__(self, *args, **kwargs)
+        if not hasattr(self, 'assertRaisesRegex'):
+            self.assertRaisesRegex = self.assertRaisesRegexp
+
     if sys.version_info[0] > 2:
         exec("""
 def test_signature_object(self):
@@ -640,6 +645,12 @@ def test_signature_replace_anno(self):
 
 
 class TestParameterObject(unittest.TestCase):
+
+    def __init__(self, *args, **kwargs):
+        unittest.TestCase.__init__(self, *args, **kwargs)
+        if not hasattr(self, 'assertRaisesRegex'):
+            self.assertRaisesRegex = self.assertRaisesRegexp
+
     def test_signature_parameter_kinds(self):
         P = inspect.Parameter
         self.assertTrue(P.POSITIONAL_ONLY < P.POSITIONAL_OR_KEYWORD < \
@@ -758,6 +769,11 @@ class TestSignatureBind(unittest.TestCase):
         sig = inspect.signature(func)
         ba = sig.bind(*args, **kwargs)
         return func(*ba.args, **ba.kwargs)
+
+    def __init__(self, *args, **kwargs):
+        unittest.TestCase.__init__(self, *args, **kwargs)
+        if not hasattr(self, 'assertRaisesRegex'):
+            self.assertRaisesRegex = self.assertRaisesRegexp
 
     def test_signature_bind_empty(self):
         def test():
@@ -958,6 +974,12 @@ def test_signature_bind_positional_only(self):
 
 
 class TestBoundArguments(unittest.TestCase):
+
+    def __init__(self, *args, **kwargs):
+        unittest.TestCase.__init__(self, *args, **kwargs)
+        if not hasattr(self, 'assertRaisesRegex'):
+            self.assertRaisesRegex = self.assertRaisesRegexp
+
     def test_signature_bound_arguments_unhashable(self):
         def foo(a): pass
         ba = inspect.signature(foo).bind(1)
