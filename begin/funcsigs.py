@@ -150,11 +150,11 @@ def signature(obj):
     raise ValueError('callable {!r} is not supported by signature'.format(obj))
 
 
-class _void:
+class _void(object):
     '''A private marker - used in Parameter & Signature'''
 
 
-class _empty:
+class _empty(object):
     pass
 
 
@@ -178,7 +178,7 @@ _KEYWORD_ONLY           = _ParameterKind(3, name='KEYWORD_ONLY')
 _VAR_KEYWORD            = _ParameterKind(4, name='VAR_KEYWORD')
 
 
-class Parameter:
+class Parameter(object):
     '''Represents a parameter in a function signature.
 
     Has the following public attributes:
@@ -314,7 +314,7 @@ class Parameter:
         return not self.__eq__(other)
 
 
-class BoundArguments:
+class BoundArguments(object):
     '''Result of `Signature.bind` call.  Holds the mapping of arguments
     to the function's parameters.
 
@@ -407,7 +407,7 @@ class BoundArguments:
         return not self.__eq__(other)
 
 
-class Signature:
+class Signature(object):
     '''A Signature object represents the overall signature of a function.
     It stores a Parameter object for each parameter accepted by the
     function, as well as information specific to the function itself.
