@@ -303,6 +303,10 @@ class Parameter(object):
         return '<{} at {:#x} {!r}>'.format(self.__class__.__name__,
                                            id(self), self.name)
 
+    def __hash__(self):
+        msg = "unhashable type: '{0}'".format(self.__class__.__name__)
+        raise TypeError(msg)
+
     def __eq__(self, other):
         return (issubclass(other.__class__, Parameter) and
                 self._name == other._name and
@@ -397,6 +401,10 @@ class BoundArguments(object):
                     kwargs[param_name] = arg
 
         return kwargs
+
+    def __hash__(self):
+        msg = "unhashable type: '{0}'".format(self.__class__.__name__)
+        raise TypeError(msg)
 
     def __eq__(self, other):
         return (issubclass(other.__class__, BoundArguments) and
@@ -573,6 +581,10 @@ class Signature(object):
 
         return type(self)(parameters,
                           return_annotation=return_annotation)
+
+    def __hash__(self):
+        msg = "unhashable type: '{0}'".format(self.__class__.__name__)
+        raise TypeError(msg)
 
     def __eq__(self, other):
         if (not issubclass(type(other), Signature) or
