@@ -73,6 +73,10 @@ def test_signature_object(self):
         with self.assertRaises(AttributeError):
             sig.foo = 'bar'
 
+        # Python2 does not have MappingProxyType class
+        if sys.version_info[:2] < (3, 3):
+            return
+
         with self.assertRaises(TypeError):
             sig.parameters['a'] = None
 
