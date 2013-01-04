@@ -490,7 +490,7 @@ class Signature:
         positional = tuple(arg_names[:pos_count])
         keyword_only_count = getattr(func_code, 'co_kwonlyargcount', 0)
         keyword_only = arg_names[pos_count:(pos_count + keyword_only_count)]
-        annotations = func.__annotations__
+        annotations = getattr(func, '__annotations__', {})
         defaults = func.__defaults__
         kwdefaults = func.__kwdefaults__
 
