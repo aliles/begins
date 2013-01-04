@@ -492,7 +492,7 @@ class Signature:
         keyword_only = arg_names[pos_count:(pos_count + keyword_only_count)]
         annotations = getattr(func, '__annotations__', {})
         defaults = func.__defaults__
-        kwdefaults = func.__kwdefaults__
+        kwdefaults = getattr(func, '__kwdefaults__', None)
 
         if defaults:
             pos_default_count = len(defaults)
