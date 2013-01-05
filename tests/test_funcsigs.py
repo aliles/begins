@@ -522,6 +522,8 @@ def test_signature_on_class(self):
         with self.assertRaisesRegex(ValueError, "not supported by signature"):
             inspect.signature(ToFail())
 
+        if sys.version_info[0] < 3:
+            return
 
         class Wrapped(object):
             pass
