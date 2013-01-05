@@ -24,9 +24,11 @@ def formatannotation(annotation, base_module=None):
     return repr(annotation)
 
 
-def _get_user_defined_method(cls, method_name):
+def _get_user_defined_method(cls, method_name, *nested):
     try:
         meth = getattr(cls, method_name)
+        for name in nested:
+            meth = getattr(meth, name, meth)
     except AttributeError:
         return
     else:
@@ -133,7 +135,7 @@ def signature(obj):
         # We also check that the 'obj' is not an instance of
         # _WrapperDescriptor or _MethodWrapper to avoid
         # infinite recursion (and even potential segfault)
-        call = _get_user_defined_method(type(obj), '__call__')
+        call = _get_user_defined_method(type(obj), '__call__', 'im_func')
         if call is not None:
             sig = signature(call)
 

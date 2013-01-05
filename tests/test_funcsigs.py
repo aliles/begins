@@ -497,7 +497,7 @@ def test_signature_on_class(self):
 """)
 
     def test_signature_on_callable_objects(self):
-        class Foo:
+        class Foo(object):
             def __call__(self, a):
                 pass
 
@@ -505,7 +505,7 @@ def test_signature_on_class(self):
                          ((('a', Ellipsis, Ellipsis, "positional_or_keyword"),),
                           Ellipsis))
 
-        class Spam:
+        class Spam(object):
             pass
         with self.assertRaisesRegex(TypeError, "is not a callable object"):
             inspect.signature(Spam())
@@ -517,13 +517,13 @@ def test_signature_on_class(self):
                          ((('a', Ellipsis, Ellipsis, "positional_or_keyword"),),
                           Ellipsis))
 
-        class ToFail:
+        class ToFail(object):
             __call__ = type
         with self.assertRaisesRegex(ValueError, "not supported by signature"):
             inspect.signature(ToFail())
 
 
-        class Wrapped:
+        class Wrapped(object):
             pass
         Wrapped.__wrapped__ = lambda a: None
         self.assertEqual(self.signature(Wrapped),
