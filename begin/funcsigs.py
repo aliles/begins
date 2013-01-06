@@ -564,9 +564,9 @@ class Signature(object):
 
     @property
     def parameters(self):
-        if hasattr(types, 'MappingProxyType'):
+        try:
             return types.MappingProxyType(self._parameters)
-        else:
+        except AttributeError:
             return OrderedDict(self._parameters.items())
 
     @property
