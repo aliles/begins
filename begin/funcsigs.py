@@ -1,11 +1,15 @@
 # Copyright 2001-2013 Python Software Foundation; All Rights Reserved
 "Function signatures functionality from PEP362"
 from __future__ import absolute_import, division, print_function
-from collections import OrderedDict
 import itertools
 import functools
 import re
 import types
+
+try:
+    from collections import OrderedDict
+except ImportError:
+    from begin.odict import OrderedDict
 
 
 _WrapperDescriptor = type(type.__call__)
@@ -42,7 +46,7 @@ def signature(obj):
     '''Get a signature object for the passed callable.'''
 
     if not callable(obj):
-        raise TypeError('{!r} is not a callable object'.format(obj))
+        raise TypeError('{0!r} is not a callable object'.format(obj))
 
     if isinstance(obj, types.MethodType):
         # In this case we skip the first parameter of the underlying
@@ -79,7 +83,7 @@ def signature(obj):
         try:
             ba = sig.bind_partial(*partial_args, **partial_keywords)
         except TypeError as ex:
-            msg = 'partial object {!r} has incorrect arguments'.format(obj)
+            msg = 'partial object {0!r} has incorrect arguments'.format(obj)
             raise ValueError(msg)
 
         for arg_name, arg_value in ba.arguments.items():
@@ -146,10 +150,10 @@ def signature(obj):
 
     if isinstance(obj, types.BuiltinFunctionType):
         # Raise a nicer error message for builtins
-        msg = 'no signature found for builtin function {!r}'.format(obj)
+        msg = 'no signature found for builtin function {0!r}'.format(obj)
         raise ValueError(msg)
 
-    raise ValueError('callable {!r} is not supported by signature'.format(obj))
+    raise ValueError('callable {0!r} is not supported by signature'.format(obj))
 
 
 class _void(object):
@@ -170,7 +174,7 @@ class _ParameterKind(int):
         return self._name
 
     def __repr__(self):
-        return '<_ParameterKind: {!r}>'.format(self._name)
+        return '<_ParameterKind: {0!r}>'.format(self._name)
 
 
 _POSITIONAL_ONLY        = _ParameterKind(0, name='POSITIONAL_ONLY')
@@ -220,7 +224,7 @@ class Parameter(object):
 
         if default is not _empty:
             if kind in (_VAR_POSITIONAL, _VAR_KEYWORD):
-                msg = '{} parameters cannot have default values'.format(kind)
+                msg = '{0} parameters cannot have default values'.format(kind)
                 raise ValueError(msg)
         self._default = default
         self._annotation = annotation
@@ -233,7 +237,7 @@ class Parameter(object):
         else:
             name = str(name)
             if kind != _POSITIONAL_ONLY and not re.match(r'[a-z_]\w*$', name, re.I):
-                msg = '{!r} is not a valid parameter name'.format(name)
+                msg = '{0!r} is not a valid parameter name'.format(name)
                 raise ValueError(msg)
             self._name = name
 
@@ -284,15 +288,15 @@ class Parameter(object):
         if kind == _POSITIONAL_ONLY:
             if formatted is None:
                 formatted = ''
-            formatted = '<{}>'.format(formatted)
+            formatted = '<{0}>'.format(formatted)
 
         # Add annotation and default value
         if self._annotation is not _empty:
-            formatted = '{}:{}'.format(formatted,
+            formatted = '{0}:{1}'.format(formatted,
                                        formatannotation(self._annotation))
 
         if self._default is not _empty:
-            formatted = '{}={}'.format(formatted, repr(self._default))
+            formatted = '{0}={1}'.format(formatted, repr(self._default))
 
         if kind == _VAR_POSITIONAL:
             formatted = '*' + formatted
@@ -302,7 +306,7 @@ class Parameter(object):
         return formatted
 
     def __repr__(self):
-        return '<{} at {:#x} {!r}>'.format(self.__class__.__name__,
+        return '<{0} at {1:#x} {2!r}>'.format(self.__class__.__name__,
                                            id(self), self.name)
 
     def __hash__(self):
@@ -463,7 +467,7 @@ class Signature(object):
                 for idx, param in enumerate(parameters):
                     kind = param.kind
                     if kind < top_kind:
-                        msg = 'wrong parameter order: {} before {}'
+                        msg = 'wrong parameter order: {0} before {1}'
                         msg = msg.format(top_kind, param.kind)
                         raise ValueError(msg)
                     else:
@@ -475,7 +479,7 @@ class Signature(object):
                         param = param.replace(name=name)
 
                     if name in params:
-                        msg = 'duplicate parameter name: {!r}'.format(name)
+                        msg = 'duplicate parameter name: {0!r}'.format(name)
                         raise ValueError(msg)
                     params[name] = param
             else:
@@ -490,7 +494,7 @@ class Signature(object):
         '''Constructs Signature for the given python function'''
 
         if not isinstance(func, types.FunctionType):
-            raise TypeError('{!r} is not a Python function'.format(func))
+            raise TypeError('{0!r} is not a Python function'.format(func))
 
         Parameter = cls._parameter_cls
 
@@ -594,8 +598,8 @@ class Signature(object):
                     len(self.parameters) != len(other.parameters)):
             return False
 
-        other_positions = {param: idx
-                           for idx, param in enumerate(other.parameters.keys())}
+        other_positions = dict((param, idx)
+                           for idx, param in enumerate(other.parameters.keys()))
 
         for idx, (param_name, param) in enumerate(self.parameters.items()):
             if param.kind == _KEYWORD_ONLY:
@@ -785,10 +789,10 @@ class Signature(object):
 
             result.append(formatted)
 
-        rendered = '({})'.format(', '.join(result))
+        rendered = '({0})'.format(', '.join(result))
 
         if self.return_annotation is not _empty:
             anno = formatannotation(self.return_annotation)
-            rendered += ' -> {}'.format(anno)
+            rendered += ' -> {0}'.format(anno)
 
         return rendered
