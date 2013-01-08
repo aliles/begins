@@ -46,6 +46,12 @@ def test_annotation(self):
     self.assertEqual(parser.option_list[0].help, 'help string')
 """)
 
+    def test_variable_keyword_arguments(self):
+        def main(**args):
+            pass
+        with self.assertRaises(ValueError):
+            cmdline.create_parser(main)
+
 
 if __name__ == "__main__":
     unittest.begin()
