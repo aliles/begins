@@ -1,5 +1,9 @@
 # Copyright 2001-2013 Python Software Foundation; All Rights Reserved
-"Function signatures functionality from PEP362"
+"""Function signature objects for callables
+
+Back port of Python 3.3's function signature tools from the inspect module,
+modified to be compatible with Python 2.6, 2.7 and 3.2+.
+"""
 from __future__ import absolute_import, division, print_function
 import itertools
 import functools
@@ -10,6 +14,8 @@ try:
     from collections import OrderedDict
 except ImportError:
     from begin.odict import OrderedDict
+
+__all__ = ['BoundArguments', 'Parameter', 'Signature', 'signature']
 
 
 _WrapperDescriptor = type(type.__call__)
