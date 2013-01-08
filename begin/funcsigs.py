@@ -36,6 +36,8 @@ def formatannotation(annotation, base_module=None):
 
 def _get_user_defined_method(cls, method_name, *nested):
     try:
+        if cls is type:
+            return
         meth = getattr(cls, method_name)
         for name in nested:
             meth = getattr(meth, name, meth)
