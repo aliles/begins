@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 import atexit
 import mock
+import sys
 
 try:
     import unittest2 as unittest
@@ -43,6 +44,24 @@ class TestStart(unittest.TestCase):
             self.assertEqual(1, register.call_count)
         finally:
             globals()['__name__'] = original
+
+    @mock.patch('atexit.register')
+    def test_command_line(self, register):
+        try:
+            original = sys.argv
+            sys.argv = ['', '-a', 'A']
+            original = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            @begin.start
+            def main(a, b=Ellipsis):
+                return (a, b)
+            self.assertEqual(1, register.call_count)
+            func = register.call_args[0][0]
+            self.assertEqual(('A', Ellipsis), func())
+        finally:
+            sys.argv = original
+            globals()['__name__'] = original
+
 
 
 if __name__ == '__main__':
