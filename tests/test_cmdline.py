@@ -9,7 +9,11 @@ except ImportError:
 from begin import cmdline
 
 
-class TestCommandLine(unittest.TestCase):
+class VarObj(object):
+    pass
+
+
+class TestCreateParser(unittest.TestCase):
 
     def test_void_function(self):
         def main():
@@ -51,6 +55,65 @@ def test_annotation(self):
             pass
         with self.assertRaises(ValueError):
             cmdline.create_parser(main)
+
+
+class TestApplyOptions(unittest.TestCase):
+
+    def setUp(self):
+        self.opts = VarObj()
+        self.args = []
+
+    def test_void_function(self):
+        def main():
+            return Ellipsis
+        value = cmdline.apply_options(main, self.opts, self.args)
+        self.assertIs(value, Ellipsis)
+
+    def test_positional_argument(self):
+        def main(a, b,c):
+            return (a, b, c)
+        self.opts.a = 1
+        self.opts.b = 2
+        self.opts.c = 3
+        value = cmdline.apply_options(main, self.opts, self.args)
+        self.assertTupleEqual(value, (1, 2, 3))
+
+    def test_keyword_argument(self):
+        def main(a=None, b=None, c=None):
+            return (a, b, c)
+        self.opts.a = 1
+        self.opts.b = 2
+        self.opts.c = 3
+        value = cmdline.apply_options(main, self.opts, self.args)
+        self.assertEqual(value, (1, 2, 3))
+
+    def test_variable_arguments(self):
+        def main(*args):
+            return tuple(args)
+        self.args.append(1)
+        self.args.append(2)
+        self.args.append(3)
+        value = cmdline.apply_options(main, self.opts, self.args)
+        self.assertTupleEqual(value, (1, 2, 3))
+
+    def test_variable_keywords(self):
+        def main(**kwargs):
+            return dict(args)
+        with self.assertRaises(cmdline.CommandLineError):
+            value = cmdline.apply_options(main, self.opts, self.args)
+
+    def test_missing_option(self):
+        def main(a):
+            return a
+        with self.assertRaises(cmdline.CommandLineError):
+            value = cmdline.apply_options(main, self.opts, self.args)
+
+    def test_missing_arguments(self):
+        def main():
+            return Ellipsis
+        self.args.append(None)
+        with self.assertRaises(cmdline.CommandLineError):
+            value = cmdline.apply_options(main, self.opts, self.args)
 
 
 if __name__ == "__main__":
