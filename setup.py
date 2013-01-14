@@ -27,7 +27,7 @@ setup(
     author="Aaron Iles",
     author_email="aaron.iles@gmail.com",
     url="http://begins.readthedocs.org",
-    description="Convenience functions for starting Python programs",
+    description="Command line programs for lazy humans",
     long_description=open('README.rst').read(),
     license="ASL",
     classifiers = [

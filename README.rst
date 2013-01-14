@@ -6,7 +6,7 @@ begins
 Overview
 --------
 
-Convenience functions for starting Python programs. |build_status|
+Command line programs for *lazy* humans. |build_status|
 
 ------------
 Installation
