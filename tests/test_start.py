@@ -62,6 +62,11 @@ class TestStart(unittest.TestCase):
             sys.argv = original
             globals()['__name__'] = original
 
+    @mock.patch('atexit.register')
+    def test_not_callable(self, register):
+        with self.assertRaises(ValueError):
+            begin.start(Ellipsis)
+        self.assertEqual(0, register.call_count)
 
 
 if __name__ == '__main__':
