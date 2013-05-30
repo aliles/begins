@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 deps:
-	pip install --upgrade --use-mirrors -r requirements.txt
+	pip install --upgrade -r requirements.txt
 
 sdist:
 	python setup.py sdist
