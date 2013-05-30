@@ -8,6 +8,7 @@ sdist:
 
 # register:
 # 	python setup.py register
+# 	python setup.py sdist upload
 
 site:
 	cd docs; make html
@@ -22,7 +23,7 @@ lint:
 	flake8 --exit-zero begin tests
 
 coverage:
-	coverage report --show-missing --include="begin*"
+	coverage report --show-missing
 
 clean:
 	python setup.py clean --all
