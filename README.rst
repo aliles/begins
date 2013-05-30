@@ -6,7 +6,9 @@ begins
 Overview
 --------
 
-Command line programs for *lazy* humans. |build_status|
+Command line programs for *lazy* humans.
+
+|build_status| |coverage|
 
 ------------
 Installation
@@ -164,5 +166,11 @@ be made using GitHub' `issues system`_.
 .. _Pip: http://www.pip-installer.org
 .. _issues system: https://github.com/aliles/begins/issues
 .. _function annotations: http://www.python.org/dev/peps/pep-3107/
+
 .. |build_status| image:: https://secure.travis-ci.org/aliles/begins.png?branch=master
    :target: https://travis-ci.org/aliles/begins
+   :alt: Current build status
+
+.. |coverage| image:: https://coveralls.io/repos/aliles/begins/badge.png?branch=master
+   :target: https://coveralls.io/r/aliles/begins?branch=master
+   :alt: Latest PyPI version
