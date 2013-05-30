@@ -1,6 +1,4 @@
-from distribute_setup import use_setuptools
-use_setuptools()
-
+#!/usr/bin/env python
 from setuptools import setup
 import re
 import sys
