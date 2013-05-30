@@ -32,6 +32,7 @@ class TestStart(unittest.TestCase):
         def main():
             pass
         self.assertEqual(0, register.call_count)
+        self.assertTrue(callable(main))
 
     @mock.patch('atexit.register')
     def test_decorate_true(self, register):
@@ -42,6 +43,7 @@ class TestStart(unittest.TestCase):
             def main():
                 pass
             self.assertEqual(1, register.call_count)
+            self.assertTrue(callable(main))
         finally:
             globals()['__name__'] = original
 

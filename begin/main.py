@@ -61,3 +61,4 @@ def start(func=None):
             opts, args = parser.parse_args()
             func = functools.partial(cmdline.apply_options, func, opts, args)
         atexit.register(func)
+    return func
