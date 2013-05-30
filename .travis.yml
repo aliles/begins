@@ -10,6 +10,8 @@ install:
   - python setup.py install
 script:
   - coverage run setup.py test
-  - coverage report --include="begin*"
+  - coverage report --show-missing
+after_success:
+  - coveralls
 notifications:
     email: aaron.iles+travis-ci@gmail.com

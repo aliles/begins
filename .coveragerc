@@ -1,0 +1,6 @@
+[run]
+source=begin
+omit=begin/funcsigs*
+
+[report]
+include=begin*
