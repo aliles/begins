@@ -1,5 +1,4 @@
 from __future__ import absolute_import, division, print_function
-import atexit
 import mock
 import sys
 
@@ -26,29 +25,29 @@ class TestStart(unittest.TestCase):
         finally:
             globals()['__name__'] = original
 
-    @mock.patch('atexit.register')
-    def test_decorate_false(self, register):
+    def test_decorate_false(self):
+        target = mock.Mock()
         @begin.start
         def main():
-            pass
-        self.assertEqual(0, register.call_count)
+            target()
+        self.assertFalse(target.called)
         self.assertTrue(callable(main))
 
-    @mock.patch('atexit.register')
-    def test_decorate_true(self, register):
+    def test_decorate_true(self):
+        target = mock.Mock()
         try:
             original = globals()['__name__']
             globals()['__name__'] = "__main__"
             @begin.start
             def main():
-                pass
-            self.assertEqual(1, register.call_count)
-            self.assertTrue(callable(main))
+                target()
+            self.assertTrue(target.called)
+            self.assertEqual(target.call_args[0], tuple())
         finally:
             globals()['__name__'] = original
 
-    @mock.patch('atexit.register')
-    def test_command_line(self, register):
+    def test_command_line(self):
+        target = mock.Mock()
         try:
             original = sys.argv
             sys.argv = ['', '-a', 'A']
@@ -56,19 +55,17 @@ class TestStart(unittest.TestCase):
             globals()['__name__'] = "__main__"
             @begin.start
             def main(a, b=Ellipsis):
-                return (a, b)
-            self.assertEqual(1, register.call_count)
-            func = register.call_args[0][0]
-            self.assertEqual(('A', Ellipsis), func())
+                target(a, b)
+            self.assertTrue(target.called)
+            self.assertEqual(target.call_args[0], ('A', Ellipsis))
         finally:
             sys.argv = original
             globals()['__name__'] = original
 
-    @mock.patch('atexit.register')
-    def test_not_callable(self, register):
+    def test_not_callable(self):
+        target = mock.Mock
         with self.assertRaises(ValueError):
             begin.start(Ellipsis)
-        self.assertEqual(0, register.call_count)
 
 
 if __name__ == '__main__':

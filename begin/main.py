@@ -1,7 +1,5 @@
 "Syntactic sugar for a programs 'main'."
 from __future__ import absolute_import, division, print_function
-import atexit
-import functools
 import inspect
 
 from begin import cmdline
@@ -31,8 +29,9 @@ def start(func=None):
     ... def main():
     ...     pass
 
-    This uses the atexit module so may not work correctly with code that
-    uses sys.exitfunc.
+    This also inspects the stack frame of the caller, choosing whether to call
+    function immediately. Any definitions following the function wont be
+    called until after the main function is complete.
 
     If used as a decorator, and the decorated function accepts either
     positional or keyword arguments, a command line parser will be generated
@@ -59,6 +58,7 @@ def start(func=None):
         parser = cmdline.create_parser(func)
         if len(parser.option_list) > 1:
             opts, args = parser.parse_args()
-            func = functools.partial(cmdline.apply_options, func, opts, args)
-        atexit.register(func)
+            cmdline.apply_options(func, opts, args)
+        else:
+            func()
     return func

@@ -56,14 +56,15 @@ To be replace with::
 
 If used as a decorator
 to annotate a function
-it will register the function
-to run after the module
-has been loaded
-if the module is
-the ``__main__`` module.
-This uses the ``atexit`` module
-so may not work correctly with
-code that uses ``sys.exitfunc``.
+the function will be called
+if defined in the ``__main__`` module
+as determined by inspecting
+the current stack frame.
+Any definitions that follow
+the decorated function
+wont be created until
+after the function call
+is complete.
 
 Usage of ``begin.start()`` as
 a decorator looks like::
