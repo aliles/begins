@@ -1,10 +1,15 @@
 "Generate command line parsers and apply options using function signatures"
 import optparse
+import os
+import sys
 
 try:
     from inspect import signature
 except ImportError:
     from begin.funcsigs import signature
+
+
+NODEFAULT = object()
 
 
 class CommandLineError(ValueError):
@@ -26,7 +31,7 @@ def create_parser(func):
         if param.kind == param.POSITIONAL_OR_KEYWORD or \
                 param.kind == param.KEYWORD_ONLY or \
                 param.kind == param.POSITIONAL_ONLY:
-            attrs = {}
+            attrs = {'default': NODEFAULT}
             if param.default is not param.empty:
                 attrs['default'] = param.default
             if param.annotation is not param.empty:
@@ -52,28 +57,28 @@ def apply_options(func, opts, args):
     options object or to failure to use the command line arguments list will
     result in a CommandLineError being raised.
     """
+    def getoption(opts, name):
+        if not hasattr(opts, name):
+            msg = "Missing command line options '{0}'".format(name)
+            raise CommandLineError(msg)
+        value = getattr(opts, name)
+        if value is NODEFAULT:
+            msg = "'{0}' is a required option{1}".format(name, os.linesep)
+            sys.stderr.write(msg)
+            sys.exit(1)
+        return value
     sig = signature(func)
     pargs = []
     kwargs = {}
     for param in sig.parameters.values():
-        if param.kind == param.POSITIONAL_OR_KEYWORD:
-            if not hasattr(opts, param.name):
-                msg = "Missing command line options '{0}'".format(param.name)
-                raise CommandLineError(msg)
-            pargs.append(getattr(opts, param.name))
-        elif param.kind == param.POSITIONAL_ONLY:
-            if not hasattr(opts, param.name):
-                msg = "Missing command line options '{0}'".format(param.name)
-                raise CommandLineError(msg)
-            pargs.append(getattr(opts, param.name))
+        if param.kind == param.POSITIONAL_OR_KEYWORD or \
+                param.kind == param.POSITIONAL_ONLY:
+            pargs.append(getoption(opts, param.name))
         elif param.kind == param.VAR_POSITIONAL:
             pargs.extend(args)
             args = []
         elif param.kind == param.KEYWORD_ONLY:
-            if not hasattr(opts, param.name):
-                msg = "Missing command line options '{0}'".format(param.name)
-                raise CommandLineError(msg)
-            kwargs[param.name] = getattr(opts, param.name)
+            kwargs[param.name] = getoption(opts, param.nmae)
         elif param.kind == param.VAR_KEYWORD:
             msg = 'Variable length keyword arguments not supported'
             raise CommandLineError(msg)

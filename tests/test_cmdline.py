@@ -1,4 +1,5 @@
 from __future__ import absolute_import, division, print_function
+import mock
 import sys
 
 try:
@@ -26,6 +27,7 @@ class TestCreateParser(unittest.TestCase):
             pass
         parser = cmdline.create_parser(main)
         self.assertEqual(len(parser.option_list), 4)
+        self.assertIs(parser.option_list[0].default, cmdline.NODEFAULT)
 
     def test_keyword_argument(self):
         def main(opt=Ellipsis):
@@ -122,6 +124,15 @@ class TestApplyOptions(unittest.TestCase):
         self.args.append(None)
         with self.assertRaises(cmdline.CommandLineError):
             value = cmdline.apply_options(main, self.opts, self.args)
+
+    @mock.patch('sys.stderr')
+    @mock.patch('sys.exit')
+    def test_missing_required(self, exit, stderr):
+        def main(a):
+            pass
+        self.opts.a = cmdline.NODEFAULT
+        cmdline.apply_options(main, self.opts, self.args)
+        self.assertTrue(exit.called)
 
 
 if __name__ == "__main__":

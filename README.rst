@@ -94,7 +94,7 @@ those parameters::
 
     >>> import begin
     >>> @begin.start
-    ... def run(name, quest, colour='blue', *knights):
+    ... def run(name='Arther', quest='Holy Grail', colour='blue', *knights):
     ...     "tis but a scratch!"
 
 The decorated function above
@@ -153,6 +153,13 @@ are used by
 the decorated function
 an exception
 will be raised.
+
+If a paramater
+does not have a default,
+failing to pass a value
+on the command line
+will cause running the program to
+print an error and exit.
 
 ------
 Issues
