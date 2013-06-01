@@ -56,12 +56,11 @@ def apply_options(func, opts, args):
     pargs = []
     kwargs = {}
     for param in sig.parameters.values():
-        if param.kind == param.POSITIONAL_OR_KEYWORD or \
-                param.kind == param.KEYWORD_ONLY:
+        if param.kind == param.POSITIONAL_OR_KEYWORD:
             if not hasattr(opts, param.name):
                 msg = "Missing command line options '{0}'".format(param.name)
                 raise CommandLineError(msg)
-            kwargs[param.name] = getattr(opts, param.name)
+            pargs.append(getattr(opts, param.name))
         elif param.kind == param.POSITIONAL_ONLY:
             if not hasattr(opts, param.name):
                 msg = "Missing command line options '{0}'".format(param.name)
@@ -70,6 +69,11 @@ def apply_options(func, opts, args):
         elif param.kind == param.VAR_POSITIONAL:
             pargs.extend(args)
             args = []
+        elif param.kind == param.KEYWORD_ONLY:
+            if not hasattr(opts, param.name):
+                msg = "Missing command line options '{0}'".format(param.name)
+                raise CommandLineError(msg)
+            kwargs[param.name] = getattr(opts, param.name)
         elif param.kind == param.VAR_KEYWORD:
             msg = 'Variable length keyword arguments not supported'
             raise CommandLineError(msg)

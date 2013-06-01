@@ -102,6 +102,14 @@ class TestApplyOptions(unittest.TestCase):
         with self.assertRaises(cmdline.CommandLineError):
             value = cmdline.apply_options(main, self.opts, self.args)
 
+    def test_positional_with_variable_arguments(self):
+        def main(a, *b):
+            return (a, b)
+        self.opts.a = 1
+        self.args.append(2)
+        value = cmdline.apply_options(main, self.opts, self.args)
+        self.assertTupleEqual(value, (1, (2,)))
+
     def test_missing_option(self):
         def main(a):
             return a
