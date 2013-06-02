@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division, print_function
 import mock
+import os
 import sys
 
 try:
@@ -63,6 +64,18 @@ def test_annotation(self):
             pass
         with self.assertRaises(ValueError):
             cmdline.create_parser(main)
+
+    def test_env_defaults(self):
+        def main(one, two):
+            pass
+        try:
+            original = os.environ
+            os.environ = {'ONE': 1}
+            parser = cmdline.create_parser(main)
+            self.assertEqual(parser.option_list[0].default, 1)
+            self.assertIs(parser.option_list[1].default, cmdline.NODEFAULT)
+        finally:
+            os.environ = original
 
 
 class TestApplyOptions(unittest.TestCase):

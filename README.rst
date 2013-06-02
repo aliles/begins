@@ -161,6 +161,32 @@ on the command line
 will cause running the program to
 print an error and exit.
 
+---------------------
+Environment Variables
+---------------------
+
+Default values for
+command line options can
+be overridden using
+envionrment variables.
+The presence of an
+uppercased version of
+a command line option
+as an environment variable
+will set the default value of
+command line options.
+In the example above,
+if an environment variable
+``NAME`` existed,
+it's value would be
+used as the default for
+the ``name`` option.
+The options value can
+still be set by
+explicitly passing a
+new value as
+a command line option.
+
 ------
 Issues
 ------
