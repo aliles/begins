@@ -56,7 +56,8 @@ def test_annotation(self):
         pass
     parser = cmdline.create_parser(main)
     self.assertEqual(len(parser.option_list), 2)
-    self.assertEqual(parser.option_list[0].help, 'help string')
+    self.assertEqual(parser.option_list[0].help,
+        'help string [default: %default]')
 """)
 
     def test_variable_keyword_arguments(self):
@@ -76,6 +77,13 @@ def test_annotation(self):
             self.assertIs(parser.option_list[1].default, cmdline.NODEFAULT)
         finally:
             os.environ = original
+
+    def test_help_strings(self):
+        def main(a, b=None):
+            pass
+        parser = cmdline.create_parser(main)
+        self.assertIs(parser.option_list[0].help, None)
+        self.assertEquals(parser.option_list[1].help, '[default: %default]')
 
 
 class TestApplyOptions(unittest.TestCase):

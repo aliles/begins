@@ -36,7 +36,9 @@ def create_parser(func):
             if param.default is not param.empty:
                 args['default'] = param.default
             if param.annotation is not param.empty:
-                args['help'] = param.annotation
+                args['help'] = param.annotation + ' [default: %default]'
+            elif args['default'] is not NODEFAULT:
+                args['help'] = '[default: %default]'
             option = optparse.make_option('-' + param.name[0],
                     '--' + param.name, **args)
             option_list.append(option)
