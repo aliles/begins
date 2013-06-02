@@ -36,6 +36,12 @@ class TestCreateParser(unittest.TestCase):
         self.assertEqual(len(parser.option_list), 2)
         self.assertIs(parser.option_list[0].default, Ellipsis)
 
+    def test_variable_arguments(self):
+        def main(*variable_arguments):
+            pass
+        parser = cmdline.create_parser(main)
+        self.assertIn('variable_arguments', parser.usage)
+
     def test_function_description(self):
         def main():
             'program description'

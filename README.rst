@@ -101,7 +101,7 @@ The decorated function above
 will generate the following
 command line help::
 
-    Usage: run.py [options]
+    Usage: run.py [knights]
 
     tis but a scratch!
 
@@ -125,7 +125,7 @@ For example::
 
 Will generate command help like::
 
-    Usage: run.py [options]
+    Usage: run.py [knights]
 
     Options:
         -n NAME, --name=NAME  What, is your name?

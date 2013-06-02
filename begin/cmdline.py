@@ -27,22 +27,24 @@ def create_parser(func):
     """
     sig = signature(func)
     option_list = []
+    attrs = {'conflict_handler': 'resolve'}
     for param in sig.parameters.values():
         if param.kind == param.POSITIONAL_OR_KEYWORD or \
                 param.kind == param.KEYWORD_ONLY or \
                 param.kind == param.POSITIONAL_ONLY:
-            attrs = {'default': NODEFAULT}
+            args = {'default': NODEFAULT}
             if param.default is not param.empty:
-                attrs['default'] = param.default
+                args['default'] = param.default
             if param.annotation is not param.empty:
-                attrs['help'] = param.annotation
+                args['help'] = param.annotation
             option = optparse.make_option('-' + param.name[0],
-                    '--' + param.name, **attrs)
+                    '--' + param.name, **args)
             option_list.append(option)
+        elif param.kind == param.VAR_POSITIONAL:
+            attrs['usage'] = "%prog [{0}]".format(param.name)
         elif param.kind == param.VAR_KEYWORD:
             msg = 'Keyword arguments not supported'
             raise ValueError(msg)
-    attrs = {'conflict_handler': 'resolve'}
     if func.__doc__ is not None:
         attrs['description'] = func.__doc__
     return optparse.OptionParser(option_list=option_list, **attrs)
