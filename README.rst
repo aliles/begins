@@ -10,6 +10,34 @@ Command line programs for *lazy* humans.
 
 |build_status| |coverage|
 
+* Decorate a function to be your programs starting point.
+* Generate command line parser based on function signature.
+* Search system environment for option default values.
+
+-----------
+Why begins?
+-----------
+
+I write a lot of
+small programs in Python.
+These programs often
+accept a small number of
+simple command line arguments.
+Having to write
+command line parsing code
+in each of these
+small programs both
+breaks my train of thought
+and greatly increases the
+volume of code I am writting.
+
+Begins was implemented to
+remove the boilerplate code
+from these Python programs.
+It's not intended to replace
+the rich command line processing
+needed for larger applications.
+
 ------------
 Installation
 ------------
