@@ -8,11 +8,11 @@ Overview
 
 Command line programs for *lazy* humans.
 
-|build_status| |coverage|
-
 * Decorate a function to be your programs starting point.
 * Generate command line parser based on function signature.
 * Search system environment for option default values.
+
+|build_status| |coverage|
 
 -----------
 Why begins?
