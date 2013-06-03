@@ -21,9 +21,10 @@ def create_parser(func):
 
     Use the function's signature to generate an OptionParser object. Default
     values are honoured, argument annotations are used as help strings and the
-    functions docstring becomes the parser description. Variable positional
-    arguments are ingored but variable keyword arguments will raise a
-    ValueError exception.
+    functions docstring becomes the parser description. Environment variables
+    can alter the default values of options. Variable positional arguments are
+    ingored but will alter the program's usage string. Variable keyword
+    arguments will raise a ValueError exception.
     """
     sig = signature(func)
     option_list = []

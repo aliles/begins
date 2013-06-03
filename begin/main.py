@@ -43,6 +43,11 @@ def start(func=None):
 
     This will cause the command line parser to accept two options, the second
     of which defaults to ''.
+
+    Default values for command line options can also be set from the current
+    environment, using the uppercased version of an options name. In the
+    example above, the environment variable 'FIRST' will set a default value
+    for the first argument.
     """
     if func is None:
         stack = inspect.stack()
