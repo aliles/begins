@@ -19,7 +19,7 @@ Why begins?
 -----------
 
 I write a lot of
-small programs in Python.
+small programs in `Python`_.
 These programs often
 accept a small number of
 simple command line arguments.
@@ -224,7 +224,8 @@ freature requests can
 be made using GitHub' `issues system`_.
 
 .. _Github: https://github.com/aliles/begins
-.. _Python Package Index: http://pypi.python.org/pypi
+.. _Python: http://python.org
+.. _Python Package Index: https://pypi.python.org/pypi
 .. _Pip: http://www.pip-installer.org
 .. _issues system: https://github.com/aliles/begins/issues
 .. _function annotations: http://www.python.org/dev/peps/pep-3107/
