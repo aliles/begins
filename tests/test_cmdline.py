@@ -78,12 +78,24 @@ def test_annotation(self):
         finally:
             os.environ = original
 
+    def test_env_prefixes(self):
+        def main(one, two):
+            pass
+        try:
+            original = os.environ
+            os.environ = {'X_ONE': 1, 'TWO': 2}
+            parser = cmdline.create_parser(main, env_prefix='X_')
+            self.assertEqual(parser.option_list[0].default, 1)
+            self.assertIs(parser.option_list[1].default, cmdline.NODEFAULT)
+        finally:
+            os.environ = original
+
     def test_help_strings(self):
         def main(a, b=None):
             pass
         parser = cmdline.create_parser(main)
         self.assertIs(parser.option_list[0].help, None)
-        self.assertEquals(parser.option_list[1].help, '[default: %default]')
+        self.assertEqual(parser.option_list[1].help, '[default: %default]')
 
 
 class TestApplyOptions(unittest.TestCase):

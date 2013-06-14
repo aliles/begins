@@ -7,7 +7,7 @@ from begin import cmdline
 __all__ = ['start']
 
 
-def start(func=None):
+def start(func=None, **kwargs):
     """Return True if called in a module that is executed.
 
     Inspects the '__name__' in the stack frame of the caller, comparing it
@@ -48,8 +48,31 @@ def start(func=None):
     environment, using the uppercased version of an options name. In the
     example above, the environment variable 'FIRST' will set a default value
     for the first argument.
+
+    To use a prefix with expected environment variables (for example, to
+    prevent collisions) give an 'env_prefix' argument to the decorator.
+
+    >>> @begin.start(env_prefix='PY_')
+    ... def main(first, second=''):
+    ...     pass
+
+    The environment variable 'PY_FIRST' will be used instead of 'FIRST'.
     """
-    if func is None:
+    def _start(func):
+        if func.__module__ == '__main__':
+            parser = cmdline.create_parser(func, **kwargs)
+            if len(parser.option_list) > 1:
+                opts, args = parser.parse_args()
+                cmdline.apply_options(func, opts, args)
+            else:
+                func()
+        return func
+
+    # start() is a decorator factory
+    if func is None and len(kwargs) > 0:
+        return _start
+    # start() is a boolean function
+    elif func is None:
         stack = inspect.stack()
         if len(stack) < 1:
             return False
@@ -57,13 +80,7 @@ def start(func=None):
         if not inspect.isframe(frame):
             return False
         return frame.f_globals['__name__'] == '__main__'
+    # not correctly used to decorate a function
     elif not callable(func):
         raise ValueError("Function '{0!r}' is not callable".format(func))
-    elif func.__module__ == '__main__':
-        parser = cmdline.create_parser(func)
-        if len(parser.option_list) > 1:
-            opts, args = parser.parse_args()
-            cmdline.apply_options(func, opts, args)
-        else:
-            func()
-    return func
+    return _start(func)

@@ -16,7 +16,7 @@ class CommandLineError(ValueError):
     """Error in command line processing"""
 
 
-def create_parser(func):
+def create_parser(func, env_prefix=''):
     """Create and OptionParser object from a function definition.
 
     Use the function's signature to generate an OptionParser object. Default
@@ -24,7 +24,8 @@ def create_parser(func):
     functions docstring becomes the parser description. Environment variables
     can alter the default values of options. Variable positional arguments are
     ingored but will alter the program's usage string. Variable keyword
-    arguments will raise a ValueError exception.
+    arguments will raise a ValueError exception. A prefix on expected
+    environment variables can be added using the env_prefix argument.
     """
     sig = signature(func)
     option_list = []
@@ -33,7 +34,8 @@ def create_parser(func):
         if param.kind == param.POSITIONAL_OR_KEYWORD or \
                 param.kind == param.KEYWORD_ONLY or \
                 param.kind == param.POSITIONAL_ONLY:
-            args = {'default': os.environ.get(param.name.upper(), NODEFAULT)}
+            env_name = (env_prefix + param.name).upper()
+            args = {'default': os.environ.get(env_name, NODEFAULT)}
             if param.default is not param.empty:
                 args['default'] = param.default
             if param.annotation is not param.empty:

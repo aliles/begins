@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division, print_function
 import mock
+import os
 import sys
 
 try:
@@ -49,9 +50,9 @@ class TestStart(unittest.TestCase):
     def test_command_line(self):
         target = mock.Mock()
         try:
-            original = sys.argv
+            orig_argv= sys.argv
             sys.argv = ['', '-a', 'A']
-            original = globals()['__name__']
+            orig_name = globals()['__name__']
             globals()['__name__'] = "__main__"
             @begin.start
             def main(a, b=Ellipsis):
@@ -59,8 +60,46 @@ class TestStart(unittest.TestCase):
             self.assertTrue(target.called)
             self.assertEqual(target.call_args[0], ('A', Ellipsis))
         finally:
-            sys.argv = original
-            globals()['__name__'] = original
+            sys.argv = orig_argv
+            globals()['__name__'] = orig_name
+
+    def test_env_defaults(self):
+        target = mock.Mock()
+        try:
+            orig_env = os.environ
+            os.environ = {'ALPHA_': 'A'}
+            orig_argv= sys.argv
+            sys.argv = []
+            orig_name = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            @begin.start
+            def main(alpha_, b=Ellipsis):
+                target(alpha_, b)
+            self.assertTrue(target.called)
+            self.assertEqual(target.call_args[0], ('A', Ellipsis))
+        finally:
+            os.environ = orig_env
+            sys.argv = orig_argv
+            globals()['__name__'] = orig_name
+
+    def test_env_prefixes(self):
+        target = mock.Mock()
+        try:
+            orig_env = os.environ
+            os.environ = {'X_ALPHA_': 'A'}
+            orig_argv= sys.argv
+            sys.argv = []
+            orig_name = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            @begin.start(env_prefix='X_')
+            def main(alpha_, b=Ellipsis):
+                target(alpha_, b)
+            self.assertTrue(target.called)
+            self.assertEqual(target.call_args[0], ('A', Ellipsis))
+        finally:
+            os.environ = orig_env
+            sys.argv = orig_argv
+            globals()['__name__'] = orig_name
 
     def test_not_callable(self):
         target = mock.Mock

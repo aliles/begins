@@ -215,6 +215,22 @@ explicitly passing a
 new value as
 a command line option.
 
+If there are concerns of
+conflicts with existing
+environment variables
+a prefix can be provided to
+the decorator::
+
+    >>> import begin
+    >>> @begin.start(env_prefix='MP_')
+    ... def run(name='Arther', quest='Holy Grail', colour='blue', *knights):
+    ...     "tis but a scratch!"
+
+This example will
+use the environment variable
+``MP_NAME`` instead of the
+preivous ``NAME``.
+
 ------
 Issues
 ------
