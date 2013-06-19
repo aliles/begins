@@ -106,6 +106,23 @@ class TestStart(unittest.TestCase):
         with self.assertRaises(ValueError):
             begin.start(Ellipsis)
 
+    def test_convert(self):
+        target = mock.Mock()
+        try:
+            orig_argv= sys.argv
+            sys.argv = ['', '-a', '1']
+            orig_name = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            @begin.start
+            @begin.convert(a=int)
+            def main(a=0):
+                target(a)
+            self.assertTrue(target.called)
+            self.assertEqual(target.call_args[0], (1,))
+        finally:
+            sys.argv = orig_argv
+            globals()['__name__'] = orig_name
+
 
 if __name__ == '__main__':
     unittest.begin()

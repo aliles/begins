@@ -27,7 +27,7 @@ def create_parser(func, env_prefix=''):
     arguments will raise a ValueError exception. A prefix on expected
     environment variables can be added using the env_prefix argument.
     """
-    sig = signature(func)
+    sig = getattr(func, '__signature__', signature(func))
     option_list = []
     attrs = {'conflict_handler': 'resolve'}
     for param in sig.parameters.values():
@@ -48,7 +48,7 @@ def create_parser(func, env_prefix=''):
         elif param.kind == param.VAR_POSITIONAL:
             attrs['usage'] = "%prog [{0}]".format(param.name)
         elif param.kind == param.VAR_KEYWORD:
-            msg = 'Keyword arguments not supported'
+            msg = 'Variable length keyword arguments not supported'
             raise ValueError(msg)
     if func.__doc__ is not None:
         attrs['description'] = func.__doc__

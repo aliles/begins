@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division, print_function
 import mock
+import sys
 
 try:
     import unittest2 as unittest
@@ -17,7 +18,12 @@ class TestBegins(unittest.TestCase):
         self.assertTrue(begin.__version__)
 
     def test_readme(self):
-        doctest.testfile('../README.rst')
+        try:
+            original = sys.argv
+            sys.argv = ['']
+            doctest.testfile('../README.rst')
+        finally:
+            sys.argv = original
 
 
 if __name__ == '__main__':

@@ -115,7 +115,7 @@ Parsing command line options
 
 If ``begin.start()`` deocrates a
 function accepts parameters
-``begin.start()`` will 
+``begin.start()`` will
 process the command for
 options to pass as
 those parameters::
@@ -134,7 +134,7 @@ command line help::
     tis but a scratch!
 
     Options:
-    -n NAME, --name=NAME  
+    -n NAME, --name=NAME
     -q QUEST, --quest=QUEST
     -c COLOUR, --colour=COLOUR
     -h, --help            show this help message and exit
@@ -144,12 +144,12 @@ for a paramter become
 the command line option help.
 For example::
 
-    import begin
-    @begin.start
-    def run(name: 'What, is your name?',
-            quest: 'What, is your quest?',
-            colour: 'What, is your favourite colour?'):
-        pass
+    >>> import begin
+    >>> @begin.start                                         # doctest: +SKIP
+    ... def run(name: 'What, is your name?',
+    ...         quest: 'What, is your quest?',
+    ...         colour: 'What, is your favourite colour?'):
+    ...     pass
 
 Will generate command help like::
 
@@ -230,6 +230,54 @@ This example will
 use the environment variable
 ``MP_NAME`` instead of the
 preivous ``NAME``.
+
+---------------------
+Argument type casting
+---------------------
+
+Command line arguments are
+always passed as strings.
+Sometimes thought it is
+more convenient to
+receive arguments of
+different types.
+For example, this is a
+possible function for
+starting a web application::
+
+    >>> @begin.start
+    ... def main(host='127.0.0.1', port='8080', debug='False'):
+    ...    port = int(port)
+    ...    debug = begin.utils.tobool(debug)
+    ...    "Run web application"
+
+Having to convert
+the ``port`` argument to
+an integer and
+the ``debug`` argument to
+a boolean is
+additional boilerplate code.
+To avoid this *begins* provides
+the ``begin.convert()`` decorator.
+This decorator accepts functions
+as keyword arguments where
+the argument name matches that of
+the decorator function.
+These functions are used
+to convert the
+types of arguments.
+
+Rewritting the example above using
+the ``begin.convert()`` decorator::
+
+    >>> @begin.start
+    ... @begin.convert(port=int, debug=begin.utils.tobool)
+    ... def main(host='127.0.0.1', port=8080, debug=False):
+    ...    "Run web application"
+
+The module ``begin.utils`` contains
+useful functions for
+converting argument types.
 
 ------
 Issues
