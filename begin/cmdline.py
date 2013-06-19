@@ -34,8 +34,11 @@ def create_parser(func, env_prefix=''):
         if param.kind == param.POSITIONAL_OR_KEYWORD or \
                 param.kind == param.KEYWORD_ONLY or \
                 param.kind == param.POSITIONAL_ONLY:
-            env_name = (env_prefix + param.name).upper()
-            args = {'default': os.environ.get(env_name, NODEFAULT)}
+            metavar = (env_prefix + param.name).upper()
+            args = {
+                    'default': os.environ.get(metavar, NODEFAULT),
+                    'metavar': metavar
+            }
             if param.default is not param.empty:
                 args['default'] = param.default
             if param.annotation is not param.empty:
