@@ -1,6 +1,8 @@
 Changelog
 ---------
 
-Next release 0.1
+0.1 (2012-03-24)
 ````````````````
 * First version released
+* begin.start() decorator
+* begin.convert() decorator
