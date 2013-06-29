@@ -20,7 +20,7 @@ PYTHON3K = sys.version_info[0] > 2
 setup(
     name="begins",
     version=load_version(),
-    packages=['begin'],
+    packages=['begin', 'begin.funcsigs'],
     zip_safe=False,
     author="Aaron Iles",
     author_email="aaron.iles@gmail.com",
