@@ -27,7 +27,9 @@ def create_parser(func, env_prefix=''):
     arguments will raise a ValueError exception. A prefix on expected
     environment variables can be added using the env_prefix argument.
     """
-    sig = getattr(func, '__signature__', signature(func))
+    while hasattr(func, '__wrapped__'):
+        func = getattr(func, '__wrapped__')
+    sig = signature(func)
     option_list = []
     attrs = {'conflict_handler': 'resolve'}
     for param in sig.parameters.values():

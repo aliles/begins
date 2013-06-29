@@ -33,7 +33,10 @@ def convert(**mappings):
     module.
     """
     def decorator(func):
-        sig = getattr(func, "__signature__", signature(func))
+        target = func
+        while hasattr(target, '__wrapped__'):
+            target = getattr(func, '__wrapped__')
+        sig = signature(target)
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             args = list(args)
@@ -62,6 +65,7 @@ def convert(**mappings):
                     msg = 'Variable length keyword arguments not supported'
                     raise ValueError(msg)
             return func(*args, **kwargs)
-        wrapper.__signature__ = sig
+        if not hasattr(wrapper, '__wrapped__'):
+            wrapper.__wrapped__ = func
         return wrapper
     return decorator
