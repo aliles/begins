@@ -17,10 +17,12 @@ def load_version(filename='begin/version.py'):
 
 PYTHON3K = sys.version_info[0] > 2
 
+requires = ['funcsigs'] if sys.version_info[:2] < (3, 2) else []
+
 setup(
     name="begins",
     version=load_version(),
-    packages=['begin', 'begin.funcsigs'],
+    packages=['begin'],
     zip_safe=False,
     author="Aaron Iles",
     author_email="aaron.iles@gmail.com",
@@ -44,6 +46,7 @@ setup(
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
+    install_requires=requires,
     tests_require=['mock'] + [] if PYTHON3K else ['unittest2'],
     test_suite="tests" if PYTHON3K else "unittest2.collector"
 )

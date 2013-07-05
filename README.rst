@@ -39,6 +39,16 @@ the rich command line processing
 needed for larger applications.
 
 ------------
+Requirements
+------------
+
+For Python versions earlier
+than Python 3.3,
+the `funcsigs`_ package from the
+`Python Package Index`_ is
+required.
+
+------------
 Installation
 ------------
 
@@ -292,6 +302,7 @@ be made using GitHub' `issues system`_.
 .. _Python Package Index: https://pypi.python.org/pypi
 .. _Pip: http://www.pip-installer.org
 .. _issues system: https://github.com/aliles/begins/issues
+.. _funcsigs: https://pypi.python.org/pypi/funcsigs
 .. _function annotations: http://www.python.org/dev/peps/pep-3107/
 
 .. |build_status| image:: https://secure.travis-ci.org/aliles/begins.png?branch=master

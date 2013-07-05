@@ -6,7 +6,7 @@ import sys
 try:
     from inspect import signature
 except ImportError:
-    from begin.funcsigs import signature
+    from funcsigs import signature
 
 
 NODEFAULT = object()

@@ -4,5 +4,6 @@ coveralls
 pip
 flake8
 flask
+funcsigs
 mock
 sphinx
