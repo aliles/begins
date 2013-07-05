@@ -12,7 +12,7 @@ Command line programs for *lazy* humans.
 * Generate command line parser based on function signature.
 * Search system environment for option default values.
 
-|build_status| |coverage|
+|pypi_version| |build_status| |coverage|
 
 -----------
 Why begins?
@@ -311,4 +311,8 @@ be made using GitHub' `issues system`_.
 
 .. |coverage| image:: https://coveralls.io/repos/aliles/begins/badge.png?branch=master
    :target: https://coveralls.io/r/aliles/begins?branch=master
+   :alt: Latest PyPI version
+
+.. |pypi_version| image:: https://pypip.in/v/begins/badge.png
+   :target: https://crate.io/packages/begins/
    :alt: Latest PyPI version
