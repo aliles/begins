@@ -1,7 +1,11 @@
 Changelog
 ---------
 
-next release 0.2
+next release 0.3
+````````````````
+* Depend on external funcsigs package
+
+0.2 (2012-07-04)
 ````````````````
 * Fix missing begin.funcsigs package in source distribution
 
