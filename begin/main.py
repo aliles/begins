@@ -61,9 +61,9 @@ def start(func=None, **kwargs):
     def _start(func):
         if func.__module__ == '__main__':
             parser = cmdline.create_parser(func, **kwargs)
-            if len(parser.option_list) > 1:
-                opts, args = parser.parse_args()
-                cmdline.apply_options(func, opts, args)
+            if parser is not None:
+                opts = parser.parse_args()
+                cmdline.apply_options(func, opts)
             else:
                 func()
         return func

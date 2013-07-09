@@ -48,6 +48,18 @@ the `funcsigs`_ package from the
 `Python Package Index`_ is
 required.
 
+For Python version 2.6,
+the `argparse`_ package from the
+`Python Package Inex`_ is
+also required.
+
+Both of these dependencies are
+listed in the package configurtion.
+If using `Pip`_ to 
+install *begins* then
+the required dependencies will
+be automatically installed.
+
 ------------
 Installation
 ------------
@@ -139,15 +151,21 @@ The decorated function above
 will generate the following
 command line help::
 
-    Usage: run.py [knights]
+    usage: example.py [-h] [-n NAME] [-q QUEST] [-c COLOUR]
+                      [knights [knights ...]]
 
     tis but a scratch!
 
-    Options:
-    -n NAME, --name=NAME
-    -q QUEST, --quest=QUEST
-    -c COLOUR, --colour=COLOUR
-    -h, --help            show this help message and exit
+    positional arguments:
+      knights
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -n NAME, --name NAME  (default: Arther)
+      -q QUEST, --quest QUEST
+                            (default: Holy Grail)
+      -c COLOUR, --colour COLOUR
+                            (default: blue)
 
 In Python3, any `function annotations`_
 for a paramter become
@@ -163,15 +181,15 @@ For example::
 
 Will generate command help like::
 
-    Usage: run.py [knights]
+    usage: holygrail_py3.py [-h] -n NAME -q QUEST -c COLOUR
 
-    Options:
-        -n NAME, --name=NAME  What, is your name?
-        -q QUEST, --quest=QUEST
-                              What, is your quest?
-        -c COLOUR, --colour=COLOUR
-                              What, is your favourite colour?
-        -h, --help            show this help message and exit
+    optional arguments:
+      -h, --help            show this help message and exit
+      -n NAME, --name NAME  What, is your name?
+      -q QUEST, --quest QUEST
+                            What, is your quest?
+      -c COLOUR, --colour COLOUR
+                            What, is your favourite colour?
 
 Command line parsing supports:
 
@@ -301,6 +319,7 @@ be made using GitHub' `issues system`_.
 .. _Python: http://python.org
 .. _Python Package Index: https://pypi.python.org/pypi
 .. _Pip: http://www.pip-installer.org
+.. _argparse: https://pypi.python.org/pypi/argparse
 .. _issues system: https://github.com/aliles/begins/issues
 .. _funcsigs: https://pypi.python.org/pypi/funcsigs
 .. _function annotations: http://www.python.org/dev/peps/pep-3107/

@@ -3,7 +3,9 @@ Changelog
 
 next release 0.3
 ````````````````
-* Depend on external funcsigs package
+* Depend on external funcsigs package for Python earlier than 3.3
+* Depend on external argparse package for Python 2.6
+* Use argparse instead over optparse internally for command line processing
 
 0.2 (2012-07-04)
 ````````````````

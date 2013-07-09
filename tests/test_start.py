@@ -51,7 +51,7 @@ class TestStart(unittest.TestCase):
         target = mock.Mock()
         try:
             orig_argv= sys.argv
-            sys.argv = ['', '-a', 'A']
+            sys.argv = orig_argv[:1] + ['-a', 'A']
             orig_name = globals()['__name__']
             globals()['__name__'] = "__main__"
             @begin.start
@@ -69,7 +69,7 @@ class TestStart(unittest.TestCase):
             orig_env = os.environ
             os.environ = {'ALPHA_': 'A'}
             orig_argv= sys.argv
-            sys.argv = []
+            sys.argv = orig_argv[:1]
             orig_name = globals()['__name__']
             globals()['__name__'] = "__main__"
             @begin.start
@@ -88,7 +88,7 @@ class TestStart(unittest.TestCase):
             orig_env = os.environ
             os.environ = {'X_ALPHA_': 'A'}
             orig_argv= sys.argv
-            sys.argv = []
+            sys.argv = orig_argv[:1]
             orig_name = globals()['__name__']
             globals()['__name__'] = "__main__"
             @begin.start(env_prefix='X_')
@@ -110,7 +110,7 @@ class TestStart(unittest.TestCase):
         target = mock.Mock()
         try:
             orig_argv= sys.argv
-            sys.argv = ['', '-a', '1']
+            sys.argv = orig_argv[:1] + ['-a', '1']
             orig_name = globals()['__name__']
             globals()['__name__'] = "__main__"
             @begin.start

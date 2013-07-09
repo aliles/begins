@@ -17,7 +17,8 @@ def load_version(filename='begin/version.py'):
 
 PYTHON3K = sys.version_info[0] > 2
 
-requires = ['funcsigs'] if sys.version_info[:2] < (3, 2) else []
+requires = ['funcsigs'] if sys.version_info[:2] < (3, 3) else []
+requires += ['argparse'] if sys.version_info[:2] < (2, 7) else []
 
 setup(
     name="begins",
