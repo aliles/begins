@@ -170,6 +170,16 @@ class TestApplyOptions(unittest.TestCase):
         cmdline.apply_options(main, self.opts)
         self.assertTrue(exit.called)
 
+    if sys.version_info[0] > 2:
+        exec("""
+def test_keyword_only(self):
+    def main(*, a=None):
+        return a
+    self.opts.a = 1
+    value = cmdline.apply_options(main, self.opts)
+    self.assertEqual(value, 1)
+""")
+
 
 if __name__ == "__main__":
     unittest.begin()

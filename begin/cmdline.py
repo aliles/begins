@@ -101,7 +101,7 @@ def apply_options(func, opts):
         elif param.kind == param.VAR_POSITIONAL:
             pargs.extend(getoption(opts, param.name, []))
         elif param.kind == param.KEYWORD_ONLY:
-            kwargs[param.name] = getoption(opts, param.nmae)
+            kwargs[param.name] = getoption(opts, param.name)
         elif param.kind == param.VAR_KEYWORD:
             msg = 'Variable length keyword arguments not supported'
             raise CommandLineError(msg)
