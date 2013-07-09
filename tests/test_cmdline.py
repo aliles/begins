@@ -51,20 +51,27 @@ class TestCreateParser(unittest.TestCase):
 
     if sys.version_info[0] > 2:
         exec("""
-def test_annotation(self):
+def test_positional_with_annotation(self):
     def main(opt:'help string'):
         pass
     parser = cmdline.create_parser(main)
     self.assertEqual(len(parser._optionals._actions), 2)
     self.assertEqual(parser._optionals._actions[1].help, 'help string')
 
-def test_annotation_with_default(self):
+def test_positional_with_annotation_and_default(self):
     def main(opt:'help string'='default'):
         pass
     parser = cmdline.create_parser(main)
     self.assertEqual(len(parser._optionals._actions), 2)
     self.assertEqual(parser._optionals._actions[1].help,
         'help string (default: %(default)s)')
+
+def test_variable_positional_with_annotation(self):
+    def main(*opts:'help string'):
+        pass
+    parser = cmdline.create_parser(main)
+    self.assertEqual(len(parser._optionals._actions), 2)
+    self.assertEqual(parser._optionals._actions[1].help, 'help string')
 """)
 
     def test_variable_keyword_arguments(self):

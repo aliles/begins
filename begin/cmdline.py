@@ -61,7 +61,7 @@ def create_parser(func, env_prefix=''):
         elif param.kind == param.VAR_POSITIONAL:
             args = {'nargs': '*'}
             if param.annotation is not param.empty:
-                args['help'] = param.annotation + ' (default: %(default)s)'
+                args['help'] = param.annotation
             parser.add_argument(param.name, **args)
         elif param.kind == param.VAR_KEYWORD:
             msg = 'Variable length keyword arguments not supported'
