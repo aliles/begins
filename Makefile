@@ -1,3 +1,5 @@
+.PHONY: deps sdist upload site test unittest lint coverage clean docs
+
 SHELL := /bin/bash
 
 deps:
@@ -6,7 +8,7 @@ deps:
 sdist:
 	python setup.py sdist
 
-register:
+upload:
 	python setup.py register
 	python setup.py sdist upload
 
