@@ -50,7 +50,7 @@ required.
 
 For Python version 2.6,
 the `argparse`_ package from the
-`Python Package Inex`_ is
+`Python Package Index`_ is
 also required.
 
 Both of these dependencies are
