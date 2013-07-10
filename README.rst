@@ -221,19 +221,23 @@ print an error and exit.
 Environment Variables
 ---------------------
 
-Default values for
-command line options can
-be overridden using
-envionrment variables.
-The presence of an
-uppercased version of
-a command line option
-as an environment variable
-will set the default value of
+Environment variables can
+be used to override the
+default values for
 command line options.
+To use environment variables
+pass a prefix string to
+``begin.start()`` decorator through
+the ``env_prefix`` paramater::
+
+    >>> import begin
+    >>> @begin.start(env_prefix='MP_')
+    ... def run(name='Arther', quest='Holy Grail', colour='blue', *knights):
+    ...     "tis but a scratch!"
+
 In the example above,
 if an environment variable
-``NAME`` existed,
+``MP_NAME`` existed,
 it's value would be
 used as the default for
 the ``name`` option.
@@ -242,22 +246,6 @@ still be set by
 explicitly passing a
 new value as
 a command line option.
-
-If there are concerns of
-conflicts with existing
-environment variables
-a prefix can be provided to
-the decorator::
-
-    >>> import begin
-    >>> @begin.start(env_prefix='MP_')
-    ... def run(name='Arther', quest='Holy Grail', colour='blue', *knights):
-    ...     "tis but a scratch!"
-
-This example will
-use the environment variable
-``MP_NAME`` instead of the
-preivous ``NAME``.
 
 ---------------------
 Argument type casting

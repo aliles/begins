@@ -16,7 +16,7 @@ class CommandLineError(ValueError):
     """Error in command line processing"""
 
 
-def create_parser(func, env_prefix=''):
+def create_parser(func, env_prefix=None):
     """Create and OptionParser object from a function definition.
 
     Use the function's signature to generate an OptionParser object. Default
@@ -32,6 +32,7 @@ def create_parser(func, env_prefix=''):
     sig = signature(func)
     if len(sig.parameters) == 0:
         return None
+    meta_prefix = '' if env_prefix is None else env_prefix
     parser = argparse.ArgumentParser(
             argument_default=NODEFAULT,
             conflict_handler='resolve',
@@ -41,9 +42,10 @@ def create_parser(func, env_prefix=''):
         if param.kind == param.POSITIONAL_OR_KEYWORD or \
                 param.kind == param.KEYWORD_ONLY or \
                 param.kind == param.POSITIONAL_ONLY:
+            metavar = (meta_prefix + param.name).upper()
             args = {
                     'default': NODEFAULT,
-                    'metavar': (env_prefix + param.name).upper(),
+                    'metavar': metavar,
             }
             if param.annotation is not param.empty:
                 args['help'] = param.annotation
@@ -53,7 +55,8 @@ def create_parser(func, env_prefix=''):
                     args['help'] = '(default: %(default)s)'
                 else:
                     args['help'] += ' (default: %(default)s)'
-            args['default'] = os.environ.get(args['metavar'], args['default'])
+            if env_prefix is not None:
+                args['default'] = os.environ.get(metavar, args['default'])
             if args['default'] is NODEFAULT:
                 args['required'] = True
             parser.add_argument('-' + param.name[0],

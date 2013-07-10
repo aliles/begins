@@ -80,14 +80,14 @@ def test_variable_positional_with_annotation(self):
         with self.assertRaises(ValueError):
             cmdline.create_parser(main)
 
-    def test_env_defaults(self):
+    def test_env_disabled(self):
         def main(one, two):
             pass
         try:
             original = os.environ
             os.environ = {'ONE': 1}
             parser = cmdline.create_parser(main)
-            self.assertEqual(parser._optionals._actions[1].default, 1)
+            self.assertEqual(parser._optionals._actions[1].default, cmdline.NODEFAULT)
             self.assertIs(parser._optionals._actions[2].default, cmdline.NODEFAULT)
         finally:
             os.environ = original

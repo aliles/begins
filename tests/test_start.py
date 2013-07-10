@@ -63,7 +63,7 @@ class TestStart(unittest.TestCase):
             sys.argv = orig_argv
             globals()['__name__'] = orig_name
 
-    def test_env_defaults(self):
+    def test_env_disabled(self):
         target = mock.Mock()
         try:
             orig_env = os.environ
@@ -73,10 +73,10 @@ class TestStart(unittest.TestCase):
             orig_name = globals()['__name__']
             globals()['__name__'] = "__main__"
             @begin.start
-            def main(alpha_, b=Ellipsis):
+            def main(alpha_='Z', b=Ellipsis):
                 target(alpha_, b)
             self.assertTrue(target.called)
-            self.assertEqual(target.call_args[0], ('A', Ellipsis))
+            self.assertEqual(target.call_args[0], ('Z', Ellipsis))
         finally:
             os.environ = orig_env
             sys.argv = orig_argv
@@ -92,7 +92,7 @@ class TestStart(unittest.TestCase):
             orig_name = globals()['__name__']
             globals()['__name__'] = "__main__"
             @begin.start(env_prefix='X_')
-            def main(alpha_, b=Ellipsis):
+            def main(alpha_='Z', b=Ellipsis):
                 target(alpha_, b)
             self.assertTrue(target.called)
             self.assertEqual(target.call_args[0], ('A', Ellipsis))
