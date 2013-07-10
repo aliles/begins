@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-next release 0.3
+0.3 (2012-07-10)
 ````````````````
 * Depend on external funcsigs package for Python earlier than 3.3
 * Depend on external argparse package for Python 2.6
