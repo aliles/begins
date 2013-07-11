@@ -55,7 +55,7 @@ also required.
 
 Both of these dependencies are
 listed in the package configurtion.
-If using `Pip`_ to 
+If using `Pip`_ to
 install *begins* then
 the required dependencies will
 be automatically installed.
@@ -294,6 +294,49 @@ the ``begin.convert()`` decorator::
 The module ``begin.utils`` contains
 useful functions for
 converting argument types.
+
+-----------------------
+Command Line Extensions
+-----------------------
+
+There are behaviours that
+are common to many
+command line applications,
+such as configuring the
+``logging`` and
+``cgitb`` modules.
+*begins* provides
+function decorators that
+extend a program's
+command line arguments to
+configure these modules.
+
+* ``begin.tracebacks()``
+
+To use these decorators
+they only need to decorate
+the main function
+before ``begin.start()``::
+
+  >>> @begin.start
+  ... @begin.tracebacks
+  ... def main(*message):
+  ...     pass
+
+The example above will
+now also support the
+following argument group::
+
+  tracebacks:
+    Extended traceback reports on failure
+
+    --tracebacks   Enable extended traceback reports
+    --tbdir TBDIR  Write tracebacks to directory
+
+Passing ``--tracebacks`` will
+cause extended traceback report to
+be generated for
+unhandled exceptions.
 
 ------
 Issues

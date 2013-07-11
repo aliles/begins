@@ -1,4 +1,5 @@
 from __future__ import absolute_import, division, print_function
+import cgitb
 import mock
 import os
 import sys
@@ -119,6 +120,23 @@ class TestStart(unittest.TestCase):
                 target(a)
             self.assertTrue(target.called)
             self.assertEqual(target.call_args[0], (1,))
+        finally:
+            sys.argv = orig_argv
+            globals()['__name__'] = orig_name
+
+    @mock.patch('cgitb.enable')
+    def test_tracebacks(self, enable):
+        target = mock.Mock()
+        try:
+            orig_argv= sys.argv
+            sys.argv = orig_argv[:1] + ['--tracebacks']
+            orig_name = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            @begin.start
+            @begin.tracebacks
+            def main():
+                pass
+            self.assertTrue(enable.called)
         finally:
             sys.argv = orig_argv
             globals()['__name__'] = orig_name

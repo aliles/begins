@@ -1,4 +1,6 @@
 from __future__ import absolute_import, division, print_function
+import argparse
+import cgitb
 import mock
 import sys
 
@@ -13,6 +15,10 @@ from begin import extensions
 def target():
     "target"
     return Ellipsis
+
+
+class Options(object):
+    pass
 
 
 class TestExtension(unittest.TestCase):
@@ -46,6 +52,43 @@ class TestExtension(unittest.TestCase):
 def test_property_annotations(self):
     self.assertIs(self.extension.__annotations__, target.__annotations__)
 """)
+
+
+class TestTracebacks(unittest.TestCase):
+
+    def setUp(self):
+        self.tracebacks = extensions.Tracebacks(target)
+
+    def test_add_arguments(self):
+        parser = argparse.ArgumentParser()
+        self.assertEqual(len(parser._action_groups), 2)
+        self.assertEqual(len(parser._optionals._actions), 1)
+        self.tracebacks.add_arguments(parser)
+        self.assertEqual(len(parser._action_groups), 3)
+        self.assertEqual(len(parser._optionals._actions), 3)
+
+    @mock.patch('cgitb.enable')
+    def test_run_disabled(self, enable):
+        opts = Options()
+        opts.tracebacks = False
+        self.tracebacks.run(opts)
+        self.assertFalse(enable.called)
+
+    @mock.patch('cgitb.enable')
+    def test_run_stdout(self, enable):
+        opts = Options()
+        opts.tracebacks = True
+        opts.tbdir = None
+        self.tracebacks.run(opts)
+        enable.assert_called_once_with(format='txt', logdir=None)
+
+    @mock.patch('cgitb.enable')
+    def test_run_directory(self, enable):
+        opts = Options()
+        opts.tracebacks = True
+        opts.tbdir = '/dev/null'
+        self.tracebacks.run(opts)
+        enable.assert_called_once_with(format='txt', logdir='/dev/null')
 
 
 if __name__ == '__main__':

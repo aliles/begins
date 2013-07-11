@@ -8,6 +8,8 @@ try:
 except ImportError:
     from funcsigs import signature
 
+from begin import extensions
+
 
 NODEFAULT = object()
 
@@ -27,17 +29,21 @@ def create_parser(func, env_prefix=None):
     arguments will raise a ValueError exception. A prefix on expected
     environment variables can be added using the env_prefix argument.
     """
-    while hasattr(func, '__wrapped__'):
-        func = getattr(func, '__wrapped__')
-    sig = signature(func)
-    if len(sig.parameters) == 0:
-        return None
-    meta_prefix = '' if env_prefix is None else env_prefix
     parser = argparse.ArgumentParser(
             argument_default=NODEFAULT,
             conflict_handler='resolve',
             description = func.__doc__
     )
+    have_extensions = False
+    while hasattr(func, '__wrapped__'):
+        if isinstance(func, extensions.Extension):
+            func.add_arguments(parser)
+            have_extensions = True
+        func = getattr(func, '__wrapped__')
+    sig = signature(func)
+    if len(sig.parameters) == 0 and not have_extensions:
+        return None
+    meta_prefix = '' if env_prefix is None else env_prefix
     for param in sig.parameters.values():
         if param.kind == param.POSITIONAL_OR_KEYWORD or \
                 param.kind == param.KEYWORD_ONLY or \
@@ -94,6 +100,11 @@ def apply_options(func, opts):
             else:
                 value = default
         return value
+    ext = func
+    while hasattr(ext, '__wrapped__'):
+        if isinstance(ext, extensions.Extension):
+            ext.run(opts)
+        ext = getattr(ext, '__wrapped__')
     sig = signature(func)
     pargs = []
     kwargs = {}

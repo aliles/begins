@@ -1,4 +1,5 @@
 from __future__ import absolute_import, division, print_function
+import cgitb
 import mock
 import os
 import sys
@@ -9,6 +10,7 @@ except ImportError:
     import unittest
 
 from begin import cmdline
+from begin import extensions
 
 
 class Options(object):
@@ -111,6 +113,14 @@ def test_variable_positional_with_annotation(self):
         self.assertIs(parser._optionals._actions[1].help, None)
         self.assertEqual(parser._optionals._actions[2].help, '(default: %(default)s)')
 
+    def test_tracebacks(self):
+        @extensions.Tracebacks
+        def main():
+            pass
+        parser = cmdline.create_parser(main)
+        self.assertEqual(len(parser._action_groups), 3)
+        self.assertEqual(len(parser._optionals._actions), 3)
+
 
 class TestApplyOptions(unittest.TestCase):
 
@@ -186,6 +196,16 @@ def test_keyword_only(self):
     value = cmdline.apply_options(main, self.opts)
     self.assertEqual(value, 1)
 """)
+
+    @mock.patch('cgitb.enable')
+    def test_tracebacks(self, enable):
+        @extensions.tracebacks
+        def main():
+            return
+        self.opts.tracebacks = True
+        self.opts.tbdir = None
+        cmdline.apply_options(main, self.opts)
+        enable.assert_called_one(format='txt', logdir=None)
 
 
 if __name__ == "__main__":
