@@ -261,6 +261,7 @@ For example, this is a
 possible function for
 starting a web application::
 
+    >>> import begin
     >>> @begin.start
     ... def main(host='127.0.0.1', port='8080', debug='False'):
     ...    port = int(port)
@@ -286,6 +287,7 @@ types of arguments.
 Rewritting the example above using
 the ``begin.convert()`` decorator::
 
+    >>> import begin
     >>> @begin.start
     ... @begin.convert(port=int, debug=begin.utils.tobool)
     ... def main(host='127.0.0.1', port=8080, debug=False):
@@ -312,31 +314,103 @@ command line arguments to
 configure these modules.
 
 * ``begin.tracebacks()``
+* ``begin.logging()``
 
 To use these decorators
-they only need to decorate
+they need to decorate
 the main function
-before ``begin.start()``::
+before ``begin.start()``
+is applied.
 
-  >>> @begin.start
-  ... @begin.tracebacks
-  ... def main(*message):
-  ...     pass
+Tracebacks
+----------
+
+The ``begin.tracebacks()`` decorator
+adds command line options for
+extended traceback reports to
+be generated for
+unhandled exceptions::
+
+   >>> import begin
+   >>> @begin.start
+   ... @begin.tracebacks
+   ... def main(*message):
+   ...     pass
 
 The example above will
-now also support the
-following argument group::
+now have the following
+additional argument group::
 
-  tracebacks:
-    Extended traceback reports on failure
+   tracebacks:
+     Extended traceback reports on failure
 
-    --tracebacks   Enable extended traceback reports
-    --tbdir TBDIR  Write tracebacks to directory
+     --tracebacks   Enable extended traceback reports
+     --tbdir TBDIR  Write tracebacks to directory
 
 Passing ``--tracebacks`` will
-cause extended traceback report to
-be generated for
+cause extended traceback reports
+to be generated for
 unhandled exceptions.
+
+Logging
+-------
+
+The ``begin.logging()`` decorator
+adds command line options for
+configuring the logging module::
+
+   >>> import logging
+   >>> import begin
+   >>> @begin.start
+   ... @begin.logging
+   ... def main(*message):
+   ...     for msg in message:
+   ...         logging.info(msg)
+
+The example above will
+now have two additional
+optional arguments as well as
+an additional argument group::
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     -v, --verbose         Increse logging output
+     -q, --quiet           Decrease logging output
+
+   logging:
+     Detailed control of logging output
+
+     --loglvl {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                           Set explicit log level
+     --logfile LOGFILE     Ouput log messages to file
+     --logfmt LOGFMT       Log message format
+
+The logging level
+defaults to ``INFO``.
+It can be adjusted
+by passing ``--quiet``,
+``--verbose`` or
+explicity using ``--loglvl``.
+
+The default log format
+depends on whether
+log output is
+being directed to
+standard out or file.
+The raw log text
+is written to
+standard out.
+The log message written
+to file output includes:
+
+* Time
+* Log level
+* Filename and line number
+* Message
+
+The message format can
+be overridden using
+the ``--logfmt`` option.
 
 ------
 Issues

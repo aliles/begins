@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division, print_function
 import cgitb
+import logging
 import mock
 import os
 import sys
@@ -137,6 +138,23 @@ class TestStart(unittest.TestCase):
             def main():
                 pass
             self.assertTrue(enable.called)
+        finally:
+            sys.argv = orig_argv
+            globals()['__name__'] = orig_name
+
+    @mock.patch('logging.getLogger')
+    def test_logging(self, getlogger):
+        target = mock.Mock()
+        try:
+            orig_argv= sys.argv
+            sys.argv = orig_argv[:1]
+            orig_name = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            @begin.start
+            @begin.logging
+            def main():
+                pass
+            self.assertTrue(getlogger.called)
         finally:
             sys.argv = orig_argv
             globals()['__name__'] = orig_name
