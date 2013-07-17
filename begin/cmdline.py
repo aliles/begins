@@ -37,7 +37,7 @@ def create_parser(func, env_prefix=None):
             description = func.__doc__
     )
     have_extensions = False
-    while hasattr(func, '__wrapped__'):
+    while hasattr(func, '__wrapped__') and not hasattr(func, '__signature__'):
         if isinstance(func, extensions.Extension):
             func.add_arguments(parser)
             have_extensions = True
@@ -103,11 +103,11 @@ def apply_options(func, opts):
                 value = default
         return value
     ext = func
-    while hasattr(ext, '__wrapped__'):
+    while hasattr(ext, '__wrapped__') and not hasattr(ext, '__signature__'):
         if isinstance(ext, extensions.Extension):
             ext.run(opts)
         ext = getattr(ext, '__wrapped__')
-    sig = signature(func)
+    sig = signature(ext)
     pargs = []
     kwargs = {}
     for param in sig.parameters.values():
