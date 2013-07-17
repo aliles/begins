@@ -2,9 +2,35 @@
 from __future__ import absolute_import, division, print_function
 import inspect
 
+from begin.wrappable import Wrapping
 from begin import cmdline
 
 __all__ = ['start']
+
+
+class Program(Wrapping):
+    """Decorate the starting command of command line application
+
+    The class instance is callable and will call the wrapped function without
+    alteration. Calling the 'start()' method will process command line options
+    and start the program appropriately.
+    """
+
+    def __init__(self, func, **kwargs):
+        Wrapping.__init__(self, func)
+        self._parser = cmdline.create_parser(func, **kwargs)
+
+    def start(self, args=None):
+        """Begin command line program
+
+        By default will use the command line arguments passed when Python was
+        initially started. New arguments can be passed through the args
+        parameter.
+        """
+        if self._parser is None:
+            return self.__wrapped__()
+        opts = self._parser.parse_args(args)
+        return cmdline.apply_options(self.__wrapped__, opts)
 
 
 def start(func=None, **kwargs):
@@ -59,14 +85,10 @@ def start(func=None, **kwargs):
     The environment variable 'PY_FIRST' will be used instead of 'FIRST'.
     """
     def _start(func):
+        prog= Program(func, **kwargs)
         if func.__module__ == '__main__':
-            parser = cmdline.create_parser(func, **kwargs)
-            if parser is not None:
-                opts = parser.parse_args()
-                cmdline.apply_options(func, opts)
-            else:
-                func()
-        return func
+            prog.start()
+        return prog
 
     # start() is a decorator factory
     if func is None and len(kwargs) > 0:

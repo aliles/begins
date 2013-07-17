@@ -34,7 +34,6 @@ class TestStart(unittest.TestCase):
         def main():
             target()
         self.assertFalse(target.called)
-        self.assertTrue(callable(main))
 
     def test_decorate_true(self):
         target = mock.Mock()
@@ -48,6 +47,22 @@ class TestStart(unittest.TestCase):
             self.assertEqual(target.call_args[0], tuple())
         finally:
             globals()['__name__'] = original
+
+    def test_decorate_callable(self):
+        target = mock.Mock()
+        @begin.start
+        def main():
+            target()
+        main()
+        self.assertTrue(target.called)
+
+    def test_entry_point(self):
+        target = mock.Mock()
+        @begin.start
+        def main():
+            target()
+        main.start()
+        self.assertTrue(target.called)
 
     def test_command_line(self):
         target = mock.Mock()
