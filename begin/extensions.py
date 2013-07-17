@@ -5,6 +5,8 @@ import logging.handlers
 import platform
 import sys
 
+__all__ = ['logger', 'tracebacks']
+
 
 class Extension(object):
     """Base class of all command line extensions

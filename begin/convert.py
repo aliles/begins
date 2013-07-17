@@ -7,6 +7,8 @@ try:
 except ImportError:
     from funcsigs import signature
 
+__all__ = ['convert']
+
 
 def convert(**mappings):
     """Cast function arguments to decorated function.
