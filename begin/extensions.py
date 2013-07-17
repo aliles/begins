@@ -5,25 +5,17 @@ import logging.handlers
 import platform
 import sys
 
+from begin.wrappable import Wrapping
+
 __all__ = ['logger', 'tracebacks']
 
 
-class Extension(object):
+class Extension(Wrapping):
     """Base class of all command line extensions
 
     Extension are required to subclass this class and override the
     add_arguments() and run() methods.
     """
-
-    OVERRIDDEN = ('__annotations__', '__doc__', '__module__', '__name__')
-
-    def __init__(self, func):
-        self.__wrapped__ = func
-        for name in self.OVERRIDDEN:
-            setattr(self, name, getattr(func, name, None))
-
-    def __call__(self, *args, **kwargs):
-        return self.__wrapped__(*args, **kwargs)
 
     def add_arguments(self, parser):
         "Add command line arguments to parser"
