@@ -151,21 +151,21 @@ The decorated function above
 will generate the following
 command line help::
 
-    usage: example.py [-h] [-n NAME] [-q QUEST] [-c COLOUR]
-                      [knights [knights ...]]
+   usage: example.py [-h] [-n NAME] [-q QUEST] [-c COLOUR]
+                     [knights [knights ...]]
 
-    tis but a scratch!
+   tis but a scratch!
 
-    positional arguments:
-      knights
+   positional arguments:
+     knights
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      -n NAME, --name NAME  (default: Arther)
-      -q QUEST, --quest QUEST
-                            (default: Holy Grail)
-      -c COLOUR, --colour COLOUR
-                            (default: blue)
+   optional arguments:
+     -h, --help            show this help message and exit
+     -n NAME, --name NAME  (default: Arther)
+     -q QUEST, --quest QUEST
+                           (default: Holy Grail)
+     -c COLOUR, --colour COLOUR
+                           (default: blue)
 
 In Python3, any `function annotations`_
 for a paramter become
@@ -181,15 +181,15 @@ For example::
 
 Will generate command help like::
 
-    usage: holygrail_py3.py [-h] -n NAME -q QUEST -c COLOUR
+   usage: holygrail_py3.py [-h] -n NAME -q QUEST -c COLOUR
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      -n NAME, --name NAME  What, is your name?
-      -q QUEST, --quest QUEST
-                            What, is your quest?
-      -c COLOUR, --colour COLOUR
-                            What, is your favourite colour?
+   optional arguments:
+     -h, --help            show this help message and exit
+     -n NAME, --name NAME  What, is your name?
+     -q QUEST, --quest QUEST
+                           What, is your quest?
+     -c COLOUR, --colour COLOUR
+                           What, is your favourite colour?
 
 Command line parsing supports:
 
@@ -412,6 +412,41 @@ The message format can
 be overridden using
 the ``--logfmt`` option.
 
+------------
+Entry Points
+------------
+
+The `setuptools`_ package supports
+`automatic script creation`_ to
+automatically create
+command line scripts.
+These command line scripts
+use the `entry points`_ system
+from setuptools.
+
+To support the
+use of entry points,
+functions decorated by
+``begin.start()`` have
+an instance method called
+``start()`` that must be
+used to configure the
+entry point::
+
+    setup(
+        # ...
+        entry_points = {
+            'console_scripts': [
+                'program = package.module:main.start'
+            ]
+        }
+
+Use of the ``start()`` method is
+required because the
+main function is not
+called from the ``__main__`` module
+by the entryp points system.
+
 ------
 Issues
 ------
@@ -425,9 +460,12 @@ be made using GitHub' `issues system`_.
 .. _Python Package Index: https://pypi.python.org/pypi
 .. _Pip: http://www.pip-installer.org
 .. _argparse: https://pypi.python.org/pypi/argparse
+.. _automatic script creation: http://peak.telecommunity.com/DevCenter/setuptools#automatic-script-creation
 .. _issues system: https://github.com/aliles/begins/issues
+.. _entry points: http://peak.telecommunity.com/DevCenter/setuptools#dynamic-discovery-of-services-and-plugins
 .. _funcsigs: https://pypi.python.org/pypi/funcsigs
 .. _function annotations: http://www.python.org/dev/peps/pep-3107/
+.. _setuptools: https://pypi.python.org/pypi/setuptools
 
 .. |build_status| image:: https://secure.travis-ci.org/aliles/begins.png?branch=master
    :target: https://travis-ci.org/aliles/begins
