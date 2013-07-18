@@ -20,6 +20,35 @@ class CommandLineError(ValueError):
     """Error in command line processing"""
 
 
+class DefaultsManager(object):
+    """Manage default values for command line options
+
+    Inspects environment variables and default argument values to determine the
+    correct default for command line option.
+    """
+
+    def __init__(self, env_prefix):
+        self._use_env = env_prefix is not None
+        self._prefix = '' if not self._use_env else env_prefix
+
+    def metavar(self, name):
+        "Generate meta variable name for parameter"
+        metavar = (self._prefix + name).upper()
+        return metavar
+
+    def from_param(self, param, default=NODEFAULT):
+        "Get default value from signature paramater"
+        if param.default is not param.empty:
+            default = param.default
+        default = self.from_name(param.name, default)
+        return default
+
+    def from_name(self, name, default=NODEFAULT):
+        if self._use_env:
+            default = os.environ.get(self.metavar(name), default)
+        return default
+
+
 def create_parser(func, env_prefix=None):
     """Create and OptionParser object from a function definition.
 
@@ -36,6 +65,7 @@ def create_parser(func, env_prefix=None):
             conflict_handler='resolve',
             description = func.__doc__
     )
+    defaults = DefaultsManager(env_prefix)
     have_extensions = False
     while hasattr(func, '__wrapped__') and not hasattr(func, '__signature__'):
         if isinstance(func, extensions.Extension):
@@ -45,28 +75,23 @@ def create_parser(func, env_prefix=None):
     sig = signature(func)
     if len(sig.parameters) == 0 and not have_extensions:
         return None
-    meta_prefix = '' if env_prefix is None else env_prefix
     for param in sig.parameters.values():
         if param.kind == param.POSITIONAL_OR_KEYWORD or \
                 param.kind == param.KEYWORD_ONLY or \
                 param.kind == param.POSITIONAL_ONLY:
-            metavar = (meta_prefix + param.name).upper()
             args = {
-                    'default': NODEFAULT,
-                    'metavar': metavar,
+                    'default': defaults.from_param(param),
+                    'metavar': defaults.metavar(param.name),
             }
             if param.annotation is not param.empty:
                 args['help'] = param.annotation
-            if param.default is not param.empty:
-                args['default'] = param.default
+            if args['default'] is NODEFAULT:
+                args['required'] = True
+            else:
                 if 'help' not in args:
                     args['help'] = '(default: %(default)s)'
                 else:
                     args['help'] += ' (default: %(default)s)'
-            if env_prefix is not None:
-                args['default'] = os.environ.get(metavar, args['default'])
-            if args['default'] is NODEFAULT:
-                args['required'] = True
             parser.add_argument('-' + param.name[0],
                     '--' + param.name, **args)
         elif param.kind == param.VAR_POSITIONAL:
