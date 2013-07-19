@@ -66,7 +66,7 @@ class DefaultsManager(object):
         return default
 
 
-def create_parser(func, env_prefix=None, config_file=None):
+def create_parser(func, env_prefix=None, config_file=None, config_section=None):
     """Create and OptionParser object from a function definition.
 
     Use the function's signature to generate an OptionParser object. Default

@@ -284,7 +284,7 @@ passing a ``config_section``
 paramater to ``begin.start()``::
 
     >>> import begin
-    >>> @begin.start(config_file='.camelot.cfg', config_sectioni='camelot')
+    >>> @begin.start(config_file='.camelot.cfg', config_section='camelot')
     ... def run(name='Arther', quest='Holy Grail', colour='blue', *knights):
     ...     "tis but a scratch!"
 
