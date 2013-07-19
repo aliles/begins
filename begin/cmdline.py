@@ -4,6 +4,11 @@ import os
 import sys
 
 try:
+    import configparser
+except ImportError:
+    import ConfigParser as configparser
+
+try:
     from inspect import signature
 except ImportError:
     from funcsigs import signature
@@ -27,9 +32,14 @@ class DefaultsManager(object):
     correct default for command line option.
     """
 
-    def __init__(self, env_prefix):
+    def __init__(self, env_prefix=None, config_file=None, config_section=None):
         self._use_env = env_prefix is not None
         self._prefix = '' if not self._use_env else env_prefix
+        self._parser = configparser.ConfigParser()
+        self._section = config_section
+        if config_file is not None:
+            self._parser.read([config_file,
+                os.path.join(os.path.expanduser('~'), config_file)])
 
     def metavar(self, name):
         "Generate meta variable name for parameter"
@@ -43,13 +53,20 @@ class DefaultsManager(object):
         default = self.from_name(param.name, default)
         return default
 
-    def from_name(self, name, default=NODEFAULT):
+    def from_name(self, name, default=NODEFAULT, section=None):
+        "Get default value from argument name"
+        if len(self._parser.sections()) > 0:
+            section = self._section if section is None else section
+            try:
+                default = self._parser.get(section, name)
+            except (configparser.NoSectionError, configparser.NoOptionError):
+                pass
         if self._use_env:
             default = os.environ.get(self.metavar(name), default)
         return default
 
 
-def create_parser(func, env_prefix=None):
+def create_parser(func, env_prefix=None, config_file=None):
     """Create and OptionParser object from a function definition.
 
     Use the function's signature to generate an OptionParser object. Default
@@ -60,12 +77,12 @@ def create_parser(func, env_prefix=None):
     arguments will raise a ValueError exception. A prefix on expected
     environment variables can be added using the env_prefix argument.
     """
+    defaults = DefaultsManager(env_prefix, config_file, func.__name__)
     parser = argparse.ArgumentParser(
             argument_default=NODEFAULT,
             conflict_handler='resolve',
             description = func.__doc__
     )
-    defaults = DefaultsManager(env_prefix)
     have_extensions = False
     while hasattr(func, '__wrapped__') and not hasattr(func, '__signature__'):
         if isinstance(func, extensions.Extension):

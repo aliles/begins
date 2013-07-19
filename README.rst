@@ -227,7 +227,7 @@ default values for
 command line options.
 To use environment variables
 pass a prefix string to
-``begin.start()`` decorator through
+the ``begin.start()`` decorator through
 the ``env_prefix`` paramater::
 
     >>> import begin
@@ -246,6 +246,52 @@ still be set by
 explicitly passing a
 new value as
 a command line option.
+
+-------------------
+Configuration Files
+-------------------
+
+Configuration files can
+also be used to
+override the default values of
+command line options.
+To use configuration files
+pass a base file name to
+the ``begin.start()`` decorator through
+the ``config_file`` paramater::
+
+    >>> import begin
+    >>> @begin.start(config_file='.camelot.cfg')
+    ... def run(name='Arther', quest='Holy Grail', colour='blue', *knights):
+    ...     "tis but a scratch!"
+
+This example will
+look for config files named
+``.camelot.cfg`` in
+the current directory and/or
+the user's home directory.
+A command line option's
+default value can be
+changed by an
+option value in
+a config file.
+The config section
+used matches the
+decorated function's name
+by default.
+This can be changed by
+passing a ``config_section``
+paramater to ``begin.start()``::
+
+    >>> import begin
+    >>> @begin.start(config_file='.camelot.cfg', config_sectioni='camelot')
+    ... def run(name='Arther', quest='Holy Grail', colour='blue', *knights):
+    ...     "tis but a scratch!"
+
+In this second example
+the section ``camelot``
+will be used instead of
+a section named ``run``.
 
 ---------------------
 Argument type casting

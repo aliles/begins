@@ -106,6 +106,15 @@ def test_variable_positional_with_annotation(self):
         finally:
             os.environ = original
 
+    @mock.patch('os.path.expanduser')
+    def test_configfile(self, expanduser):
+        def main(arg, unk):
+            pass
+        expanduser.return_value = os.path.join(os.curdir, 'tests')
+        parser = cmdline.create_parser(main, config_file='config_test.cfg')
+        self.assertEqual(parser._optionals._actions[1].default, 'value')
+        self.assertEqual(parser._optionals._actions[2].default, cmdline.NODEFAULT)
+
     def test_help_strings(self):
         def main(a, b=None):
             pass
