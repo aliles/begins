@@ -12,6 +12,7 @@ try:
 except ImportError:
     import unittest
 
+from begin import cmdline
 from begin import extensions
 
 
@@ -33,7 +34,8 @@ class TestExtension(unittest.TestCase):
         self.assertIs(self.extension(), Ellipsis)
 
     def test_add_arguments(self):
-        self.assertRaises(NotImplementedError, self.extension.add_arguments, mock.Mock())
+        self.assertRaises(NotImplementedError, self.extension.add_arguments,
+                mock.Mock(), mock.Mock())
 
     def test_run(self):
         self.assertRaises(NotImplementedError, self.extension.run, mock.Mock())
@@ -66,7 +68,7 @@ class TestTracebacks(unittest.TestCase):
         parser = argparse.ArgumentParser()
         self.assertEqual(len(parser._action_groups), 2)
         self.assertEqual(len(parser._optionals._actions), 1)
-        self.tracebacks.add_arguments(parser)
+        self.tracebacks.add_arguments(parser, cmdline.DefaultsManager())
         self.assertEqual(len(parser._action_groups), 3)
         self.assertEqual(len(parser._optionals._actions), 3)
 
@@ -109,7 +111,7 @@ class TestLoging(unittest.TestCase):
         parser = argparse.ArgumentParser()
         self.assertEqual(len(parser._action_groups), 2)
         self.assertEqual(len(parser._optionals._actions), 1)
-        self.logs.add_arguments(parser)
+        self.logs.add_arguments(parser, cmdline.DefaultsManager())
         self.assertEqual(len(parser._action_groups), 3)
         self.assertEqual(len(parser._optionals._actions), 6)
 

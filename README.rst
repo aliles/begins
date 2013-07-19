@@ -248,7 +248,7 @@ new value as
 a command line option.
 
 -------------------
-Configuration Files
+Configuration files
 -------------------
 
 Configuration files can
@@ -398,6 +398,21 @@ cause extended traceback reports
 to be generated for
 unhandled exceptions.
 
+Traceback options may
+also be set using
+config files,
+if `Configuration files`_
+are supported.
+The follow options
+are used.
+
+* ``enabled``: use any of ``true``, ``t``, ``yes``, ``y``, ``on`` or ``1``
+  to enable tracebacks.
+* ``directory``: write tracebacks to this directory.
+
+Options are expected to
+be in a ``tracebacks`` section.
+
 Logging
 -------
 
@@ -457,6 +472,22 @@ to file output includes:
 The message format can
 be overridden using
 the ``--logfmt`` option.
+
+Logging options may
+also be set using
+config files,
+if `Configuration files`_
+are supported.
+The follow options
+are used.
+
+* ``level``: log level, must be one of ``DEBUG``, ``INFO``, ``WARNING``,
+  ``ERROR`` or ``CRITICAL``.
+* ``file``: output log messages to this file.
+* ``format``: log message format.
+
+Options are expected to
+be in a ``logging`` section.
 
 ------------
 Entry Points

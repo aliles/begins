@@ -6,6 +6,7 @@ import platform
 import sys
 
 from begin.wrappable import Wrapping
+from begin.utils import tobool
 
 __all__ = ['logger', 'tracebacks']
 
@@ -17,7 +18,7 @@ class Extension(Wrapping):
     add_arguments() and run() methods.
     """
 
-    def add_arguments(self, parser):
+    def add_arguments(self, parser, defaults):
         "Add command line arguments to parser"
         raise NotImplementedError("Command line extension incomplete")
 
@@ -29,14 +30,19 @@ class Extension(Wrapping):
 class Tracebacks(Extension):
     "Manage command line extension for cgitb module"
 
-    def add_arguments(self, parser):
+    section = 'tracebacks'
+
+    def add_arguments(self, parser, defaults):
         "Add command line arguments for configuring traceback module"
         group = parser.add_argument_group('tracebacks',
                 'Extended traceback reports on failure')
-        group.add_argument('--tracebacks',
-                default=False, action='store_true',
+        group.add_argument('--tracebacks', action='store_true',
+                default=tobool(defaults.from_name(
+                    'enable', section=self.section, default='false')),
                 help='Enable extended traceback reports')
-        group.add_argument('--tbdir', default=None,
+        group.add_argument('--tbdir',
+                default=defaults.from_name(
+                    'directory', section=self.section, default=None),
                 help='Write tracebacks to directory')
 
     def run(self, opts):
@@ -54,7 +60,9 @@ def tracebacks(func):
 class Logging(Extension):
     "Manage command line extension for the logging module"
 
-    def add_arguments(self, parser):
+    section = 'logging'
+
+    def add_arguments(self, parser, defaults):
         "Add command line arguments for configuring the logging module"
         exclusive  = parser.add_mutually_exclusive_group()
         exclusive.add_argument('-v', '--verbose',
@@ -65,12 +73,18 @@ class Logging(Extension):
                 help='Decrease logging output')
         group = parser.add_argument_group('logging',
                 'Detailed control of logging output')
-        group.add_argument('--loglvl', default=None,
+        group.add_argument('--loglvl',
+                default=defaults.from_name(
+                    'level', section=self.section, default=None),
                 choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
                 help='Set explicit log level')
-        group.add_argument('--logfile', default=None,
+        group.add_argument('--logfile',
+                default=defaults.from_name(
+                    'file', section=self.section, default=None),
                 help='Ouput log messages to file')
-        group.add_argument('--logfmt', default=None,
+        group.add_argument('--logfmt',
+                default=defaults.from_name(
+                    'format', section=self.section, default=None),
                 help='Log message format')
 
     def run(self, opts):

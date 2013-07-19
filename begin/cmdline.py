@@ -86,7 +86,7 @@ def create_parser(func, env_prefix=None, config_file=None):
     have_extensions = False
     while hasattr(func, '__wrapped__') and not hasattr(func, '__signature__'):
         if isinstance(func, extensions.Extension):
-            func.add_arguments(parser)
+            func.add_arguments(parser, defaults)
             have_extensions = True
         func = getattr(func, '__wrapped__')
     sig = signature(func)
