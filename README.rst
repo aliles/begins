@@ -64,20 +64,26 @@ be automatically installed.
 Installation
 ------------
 
-Currently *begins* is not available
-for downloading from the
-`Python Package Index`_.
-However, if using `Pip`_
-you can install directly
+*begins* is available
+for download from
+the `Python Package Index`_.
+To install using `Pip`_ ::
+
+$ pip install begins
+
+Alternatively, the latest
+development version can be
+installed directly
 from `Github`_. ::
 
 $ pip install git+https://github.com/aliles/begins.git
 
 Please note that
 *begins* is still in
-an alpha state so
-the API and behaviour could
-still change.
+an alpha state 
+and therfore
+the API or behaviour
+could change.
 
 ---------------------------------
 Setting a programs starting point
