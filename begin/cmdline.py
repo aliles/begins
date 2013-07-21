@@ -15,7 +15,7 @@ except ImportError:
 
 from begin import extensions
 
-__all__ = ['create_parser', 'apply_options']
+__all__ = ['create_parser', 'populate_parser', 'apply_options']
 
 
 NODEFAULT = object()
@@ -66,33 +66,14 @@ class DefaultsManager(object):
         return default
 
 
-def create_parser(func, env_prefix=None, config_file=None, config_section=None):
-    """Create and OptionParser object from a function definition.
+def populate_parser(parser, defaults, funcsig):
+    """Populate parser according to function signature
 
-    Use the function's signature to generate an OptionParser object. Default
-    values are honoured, argument annotations are used as help strings and the
-    functions docstring becomes the parser description. Environment variables
-    can alter the default values of options. Variable positional arguments are
-    ingored but will alter the program's usage string. Variable keyword
-    arguments will raise a ValueError exception. A prefix on expected
-    environment variables can be added using the env_prefix argument.
+    Use the parameters accepted by the source function, according to the
+    functions signature provided, to populating a corresponding command line
+    argument parser.
     """
-    defaults = DefaultsManager(env_prefix, config_file, func.__name__)
-    parser = argparse.ArgumentParser(
-            argument_default=NODEFAULT,
-            conflict_handler='resolve',
-            description = func.__doc__
-    )
-    have_extensions = False
-    while hasattr(func, '__wrapped__') and not hasattr(func, '__signature__'):
-        if isinstance(func, extensions.Extension):
-            func.add_arguments(parser, defaults)
-            have_extensions = True
-        func = getattr(func, '__wrapped__')
-    sig = signature(func)
-    if len(sig.parameters) == 0 and not have_extensions:
-        return None
-    for param in sig.parameters.values():
+    for param in funcsig.parameters.values():
         if param.kind == param.POSITIONAL_OR_KEYWORD or \
                 param.kind == param.KEYWORD_ONLY or \
                 param.kind == param.POSITIONAL_ONLY:
@@ -120,6 +101,35 @@ def create_parser(func, env_prefix=None, config_file=None, config_section=None):
             msg = 'Variable length keyword arguments not supported'
             raise ValueError(msg)
     return parser
+
+
+def create_parser(func, env_prefix=None, config_file=None, config_section=None):
+    """Create and OptionParser object from a function definition.
+
+    Use the function's signature to generate an OptionParser object. Default
+    values are honoured, argument annotations are used as help strings and the
+    functions docstring becomes the parser description. Environment variables
+    can alter the default values of options. Variable positional arguments are
+    ingored but will alter the program's usage string. Variable keyword
+    arguments will raise a ValueError exception. A prefix on expected
+    environment variables can be added using the env_prefix argument.
+    """
+    defaults = DefaultsManager(env_prefix, config_file, func.__name__)
+    parser = argparse.ArgumentParser(
+            argument_default=NODEFAULT,
+            conflict_handler='resolve',
+            description = func.__doc__
+    )
+    have_extensions = False
+    while hasattr(func, '__wrapped__') and not hasattr(func, '__signature__'):
+        if isinstance(func, extensions.Extension):
+            func.add_arguments(parser, defaults)
+            have_extensions = True
+        func = getattr(func, '__wrapped__')
+    funcsig = signature(func)
+    if len(funcsig.parameters) == 0 and not have_extensions:
+        return None
+    return populate_parser(parser, defaults, funcsig)
 
 
 def apply_options(func, opts):
