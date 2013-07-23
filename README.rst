@@ -233,15 +233,15 @@ using functions as
 ``begin.subcommand`` decorator::
 
     >>> import begin
-    >>> @begin.subcommand
+    >>> @begin.subcommand                                    # doctest: +SKIP
     ... def name(answer):
     ...     "What is your name?"
     ...
-    >>> @begin.subcommand
+    >>> @begin.subcommand                                    # doctest: +SKIP
     ... def quest(answer):
     ...     "What is your quest?"
     ...
-    >>> @begin.subcommand
+    >>> @begin.subcommand                                    # doctest: +SKIP
     ... def colour(answer):
     ...     "What is your favourite colour?"
     ...
