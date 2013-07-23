@@ -174,6 +174,25 @@ class TestStart(unittest.TestCase):
             sys.argv = orig_argv
             globals()['__name__'] = orig_name
 
+    def test_subcommand(self):
+        target = mock.Mock()
+        try:
+            orig_argv= sys.argv
+            sys.argv = orig_argv[:1] + ['subcmd']
+            orig_name = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            @begin.subcommand
+            def subcmd():
+                target()
+            @begin.start
+            def main():
+                pass
+            self.assertTrue(target.called)
+        finally:
+            sys.argv = orig_argv
+            globals()['__name__'] = orig_name
+            begin.subcommands.DEFAULT.clear()
+
 
 if __name__ == '__main__':
     unittest.begin()

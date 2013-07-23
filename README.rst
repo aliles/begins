@@ -223,6 +223,54 @@ on the command line
 will cause running the program to
 print an error and exit.
 
+------------
+Sub-Commands
+------------
+
+*begins* supports
+using functions as
+`sub-commands`_ with the
+``begin.subcommand`` decorator::
+
+    >>> import begin
+    >>> @begin.subcommand
+    ... def name(answer):
+    ...     "What is your name?"
+    ...
+    >>> @begin.subcommand
+    ... def quest(answer):
+    ...     "What is your quest?"
+    ...
+    >>> @begin.subcommand
+    ... def colour(answer):
+    ...     "What is your favourite colour?"
+    ...
+    >>> @begin.start
+    ... def main():
+    ...     pass
+
+This example registers
+three sub-commands for
+the program::
+
+   usage: subcommands.py [-h] {colour,name,quest} ...
+
+   optional arguments:
+     -h, --help           show this help message and exit
+
+   Available subcommands:
+     {colour,name,quest}
+       colour             What is your favourite colour?
+       name               What is your name?
+       quest              What is your quest?
+
+The main function will
+always be called with
+the provided command line arguments.
+If a sub-command was chosen
+the associated function will
+also be called.
+
 ---------------------
 Environment Variables
 ---------------------
@@ -549,6 +597,7 @@ be made using GitHub' `issues system`_.
 .. _funcsigs: https://pypi.python.org/pypi/funcsigs
 .. _function annotations: http://www.python.org/dev/peps/pep-3107/
 .. _setuptools: https://pypi.python.org/pypi/setuptools
+.. _sub-commands: http://docs.python.org/dev/library/argparse.html#sub-commands
 
 .. |build_status| image:: https://secure.travis-ci.org/aliles/begins.png?branch=master
    :target: https://travis-ci.org/aliles/begins

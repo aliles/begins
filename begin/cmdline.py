@@ -14,8 +14,10 @@ except ImportError:
     from funcsigs import signature
 
 from begin import extensions
+from begin import subcommands
 
-__all__ = ['create_parser', 'populate_parser', 'apply_options']
+__all__ = ['create_parser', 'populate_parser',
+           'apply_options', 'call_function']
 
 
 NODEFAULT = object()
@@ -65,6 +67,9 @@ class DefaultsManager(object):
             default = os.environ.get(self.metavar(name), default)
         return default
 
+    def set_config_section(self, section):
+        self._section = section
+
 
 def populate_parser(parser, defaults, funcsig):
     """Populate parser according to function signature
@@ -103,7 +108,8 @@ def populate_parser(parser, defaults, funcsig):
     return parser
 
 
-def create_parser(func, env_prefix=None, config_file=None, config_section=None):
+def create_parser(func, env_prefix=None, config_file=None, config_section=None,
+        collector=subcommands.DEFAULT):
     """Create and OptionParser object from a function definition.
 
     Use the function's signature to generate an OptionParser object. Default
@@ -120,6 +126,14 @@ def create_parser(func, env_prefix=None, config_file=None, config_section=None):
             conflict_handler='resolve',
             description = func.__doc__
     )
+    if collector.size() > 0:
+        subparsers = parser.add_subparsers(title='Available subcommands',
+                dest='_subcommand')
+        for subfunc in collector.commands():
+            funcsig  = signature(subfunc)
+            subparser = subparsers.add_parser(subfunc.__name__, help=subfunc.__doc__)
+            defaults.set_config_section(subfunc.__name__)
+            populate_parser(subparser, defaults, funcsig)
     have_extensions = False
     while hasattr(func, '__wrapped__') and not hasattr(func, '__signature__'):
         if isinstance(func, extensions.Extension):
@@ -127,13 +141,14 @@ def create_parser(func, env_prefix=None, config_file=None, config_section=None):
             have_extensions = True
         func = getattr(func, '__wrapped__')
     funcsig = signature(func)
-    if len(funcsig.parameters) == 0 and not have_extensions:
+    if len(funcsig.parameters) == 0 and collector.size() == 0 and not have_extensions:
         return None
-    return populate_parser(parser, defaults, funcsig)
+    populate_parser(parser, defaults, funcsig)
+    return parser
 
 
-def apply_options(func, opts):
-    """Apply and call function using command line options and arguments.
+def call_function(func, funcsig, opts):
+    """Call function using command line options and arguments
 
     Use the function's signature to extract expected values from the provided
     command line options. The extracted values are used to call the funciton.
@@ -154,15 +169,9 @@ def apply_options(func, opts):
             else:
                 value = default
         return value
-    ext = func
-    while hasattr(ext, '__wrapped__') and not hasattr(ext, '__signature__'):
-        if isinstance(ext, extensions.Extension):
-            ext.run(opts)
-        ext = getattr(ext, '__wrapped__')
-    sig = signature(ext)
     pargs = []
     kwargs = {}
-    for param in sig.parameters.values():
+    for param in funcsig.parameters.values():
         if param.kind == param.POSITIONAL_OR_KEYWORD or \
                 param.kind == param.POSITIONAL_ONLY:
             pargs.append(getoption(opts, param.name))
@@ -174,3 +183,21 @@ def apply_options(func, opts):
             msg = 'Variable length keyword arguments not supported'
             raise CommandLineError(msg)
     return func(*pargs, **kwargs)
+
+
+def apply_options(func, opts, collector=subcommands.DEFAULT):
+    """Apply command line options to function and subcommands
+
+    Call the target function, and any chosen subcommands, using the parsed
+    command line arguments.
+    """
+    ext = func
+    while hasattr(ext, '__wrapped__') and not hasattr(ext, '__signature__'):
+        if isinstance(ext, extensions.Extension):
+            ext.run(opts)
+        ext = getattr(ext, '__wrapped__')
+    result = call_function(func, signature(ext), opts)
+    if hasattr(opts, '_subcommand'):
+        subfunc = collector.get(opts._subcommand)
+        result = call_function(subfunc, signature(subfunc), opts)
+    return result

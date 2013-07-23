@@ -11,6 +11,7 @@ except ImportError:
 
 from begin import cmdline
 from begin import extensions
+from begin import subcommands
 
 
 class Options(object):
@@ -18,6 +19,9 @@ class Options(object):
 
 
 class TestCreateParser(unittest.TestCase):
+
+    def tearDown(self):
+        subcommands.DEFAULT.clear()
 
     def test_void_function(self):
         def main():
@@ -130,11 +134,24 @@ def test_variable_positional_with_annotation(self):
         self.assertEqual(len(parser._action_groups), 3)
         self.assertEqual(len(parser._optionals._actions), 3)
 
+    def test_subcommand(self):
+        @subcommands.subcommand
+        def subcmd():
+            pass
+        def main():
+            pass
+        parser = cmdline.create_parser(main)
+        self.assertEqual(len(parser._action_groups), 3)
+        self.assertIn('subcmd', parser.format_help())
+
 
 class TestApplyOptions(unittest.TestCase):
 
     def setUp(self):
         self.opts = Options()
+
+    def tearDown(self):
+        subcommands.DEFAULT.clear()
 
     def test_void_function(self):
         def main():
@@ -215,6 +232,16 @@ def test_keyword_only(self):
         self.opts.tbdir = None
         cmdline.apply_options(main, self.opts)
         enable.assert_called_one(format='txt', logdir=None)
+
+    def test_subcommand(self):
+        @subcommands.subcommand
+        def subcmd():
+            return 'blue'
+        def main():
+            return 'red'
+        self.opts._subcommand = 'subcmd'
+        value = cmdline.apply_options(main, self.opts)
+        self.assertEqual('blue', value)
 
 
 if __name__ == "__main__":
