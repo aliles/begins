@@ -1,29 +1,23 @@
 "Subcommand support for command lines"
 
-class Collector(object):
+try:
+    from collections.abc import MutableMapping
+except ImportError:
+    from collections import MutableMapping
+
+
+class Collector(dict):
     """Collect functions for use as subcommands"""
 
-    def __init__(self):
-        self._commands = {}
-
-    def clear(self):
-        self._commands = {}
-
     def commands(self):
-        for name in sorted(self._commands):
-            yield self._commands[name]
-
-    def get(self, name):
-        return self._commands[name]
+        for name in sorted(self):
+            yield self[name]
 
     def register(self, func):
-        if func.__name__ in self._commands:
+        if func.__name__ in self:
             msg = "Function named '{0}' already registered".format(func.__name__)
             raise ValueError(msg)
-        self._commands[func.__name__] = func
-
-    def size(self):
-        return len(self._commands)
+        self[func.__name__] = func
 
 
 def subcommand(func=None, collector=None):

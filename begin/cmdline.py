@@ -126,7 +126,7 @@ def create_parser(func, env_prefix=None, config_file=None, config_section=None,
             conflict_handler='resolve',
             description = func.__doc__
     )
-    if collector.size() > 0:
+    if len(collector) > 0:
         subparsers = parser.add_subparsers(title='Available subcommands',
                 dest='_subcommand')
         for subfunc in collector.commands():
@@ -141,7 +141,7 @@ def create_parser(func, env_prefix=None, config_file=None, config_section=None,
             have_extensions = True
         func = getattr(func, '__wrapped__')
     funcsig = signature(func)
-    if len(funcsig.parameters) == 0 and collector.size() == 0 and not have_extensions:
+    if len(funcsig.parameters) == 0 and len(collector) == 0 and not have_extensions:
         return None
     populate_parser(parser, defaults, funcsig)
     return parser

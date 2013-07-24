@@ -42,26 +42,8 @@ class TestSubCommand(unittest.TestCase):
             def subfunction():
                 pass
 
-    def test_len_collector(self):
-        self.assertEqual(begin.subcommands.DEFAULT.size(), 0)
-        @begin.subcommand
-        def one():
-            pass
-        self.assertEqual(begin.subcommands.DEFAULT.size(), 1)
-        @begin.subcommand
-        def two():
-            pass
-        self.assertEqual(begin.subcommands.DEFAULT.size(), 2)
-
     def test_get_registered(self):
         @begin.subcommand
         def function():
             pass
         self.assertIs(begin.subcommands.DEFAULT.get('function'), function)
-
-    def test_clear(self):
-        @begin.subcommand
-        def subfunction():
-            pass
-        begin.subcommands.DEFAULT.clear()
-        self.assertEqual(begin.subcommands.DEFAULT.size(), 0)
