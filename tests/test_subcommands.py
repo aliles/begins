@@ -6,6 +6,8 @@ try:
 except ImportError:
     import unittest
 
+import pkg_resources
+
 import begin
 
 
@@ -47,3 +49,13 @@ class TestSubCommand(unittest.TestCase):
         def function():
             pass
         self.assertIs(begin.subcommands.DEFAULT.get('function'), function)
+
+    @mock.patch('pkg_resources.iter_entry_points')
+    def test_entry_points(self, iep):
+        def function():
+            pass
+        def entry_points(group, name):
+            yield function
+        iep.side_effect = entry_points
+        collector = begin.subcommands.Collector('group.name')
+        self.assertEqual(list(collector.commands()), [function])

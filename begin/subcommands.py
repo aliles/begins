@@ -5,9 +5,18 @@ try:
 except ImportError:
     from collections import MutableMapping
 
+import pkg_resources
+
 
 class Collector(dict):
     """Collect functions for use as subcommands"""
+
+    def __init__(self, group=None):
+        dict.__init__(self)
+        if group is None:
+            return
+        for func in pkg_resources.iter_entry_points(group=group, name=None):
+            self.register(func)
 
     def commands(self):
         for name in sorted(self):
