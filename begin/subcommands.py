@@ -29,20 +29,26 @@ class Collector(dict):
         self[func.__name__] = func
 
 
-def subcommand(func=None, collector=None):
+def subcommand(func=None, group=None, collector=None):
     """Register function as a program's subcommand
 
     Functions are registered with the default subcommand collector, unless a
     custom collector is provided through the 'collector' argument. Subcommands
     will automatically be included in the generated command line support.
     """
-    collector = DEFAULT if collector is None else collector
     def wrapper(func):
         collector.register(func)
         return func
+    if group is not None:
+        if group not in COLLECTORS:
+            COLLECTORS[group] = Collector(group)
+        collector = COLLECTORS[group]
+    else:
+        collector = DEFAULT if collector is None else collector
     if func is not None:
         return wrapper(func)
     return wrapper
 
 
 DEFAULT = Collector()
+COLLECTORS = {}

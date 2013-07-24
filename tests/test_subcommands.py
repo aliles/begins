@@ -15,6 +15,7 @@ class TestSubCommand(unittest.TestCase):
 
     def tearDown(self):
         begin.subcommands.DEFAULT.clear()
+        begin.subcommands.COLLECTORS.clear()
 
     def test_register_default(self):
         @begin.subcommand
@@ -59,3 +60,12 @@ class TestSubCommand(unittest.TestCase):
         iep.side_effect = entry_points
         collector = begin.subcommands.Collector('group.name')
         self.assertEqual(list(collector.commands()), [function])
+
+    def test_named_collector(self):
+        @begin.subcommand(group='named.collector')
+        def function():
+            pass
+        self.assertEqual(len(begin.subcommands.DEFAULT), 0)
+        self.assertIn('named.collector', begin.subcommands.COLLECTORS)
+        self.assertIs(function,
+                begin.subcommands.COLLECTORS['named.collector']['function'])

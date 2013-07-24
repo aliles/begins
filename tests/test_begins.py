@@ -25,6 +25,7 @@ class TestBegins(unittest.TestCase):
         finally:
             sys.argv = original
             begin.subcommands.DEFAULT.clear()
+            begin.subcommands.COLLECTORS.clear()
 
 
 if __name__ == '__main__':
