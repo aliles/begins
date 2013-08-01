@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+0.5 (2013-08-01)
+````````````````
+* Add support for sub-commands, sub-command groups and entry points
+
 0.4 (2013-07-20)
 ````````````````
 * Add function decorators to extend command line options to:
