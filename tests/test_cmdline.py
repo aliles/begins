@@ -183,6 +183,12 @@ def test_variable_positional_with_annotation(self):
             pass
         parser = cmdline.create_parser(main)
 
+    def test_no_short_args(self):
+        def main(alpha):
+            pass
+        parser = cmdline.create_parser(main, short_args=False)
+        self.assertNotIn(' -a ', parser.format_help())
+
 
 class TestApplyOptions(unittest.TestCase):
 

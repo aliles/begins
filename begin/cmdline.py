@@ -71,7 +71,7 @@ class DefaultsManager(object):
         self._section = section
 
 
-def populate_parser(parser, defaults, funcsig):
+def populate_parser(parser, defaults, funcsig, short_args):
     """Populate parser according to function signature
 
     Use the parameters accepted by the source function, according to the
@@ -82,26 +82,28 @@ def populate_parser(parser, defaults, funcsig):
         if param.kind == param.POSITIONAL_OR_KEYWORD or \
                 param.kind == param.KEYWORD_ONLY or \
                 param.kind == param.POSITIONAL_ONLY:
-            args = {
+            kwargs = {
                     'default': defaults.from_param(param),
                     'metavar': defaults.metavar(param.name),
             }
             if param.annotation is not param.empty:
-                args['help'] = param.annotation
-            if args['default'] is NODEFAULT:
-                args['required'] = True
+                kwargs['help'] = param.annotation
+            if kwargs['default'] is NODEFAULT:
+                kwargs['required'] = True
             else:
-                if 'help' not in args:
-                    args['help'] = '(default: %(default)s)'
+                if 'help' not in kwargs:
+                    kwargs['help'] = '(default: %(default)s)'
                 else:
-                    args['help'] += ' (default: %(default)s)'
-            parser.add_argument('-' + param.name[0],
-                    '--' + param.name, **args)
+                    kwargs['help'] += ' (default: %(default)s)'
+            args = ['--' + param.name]
+            if short_args:
+                args.append('-' + param.name[0])
+            parser.add_argument(*args, **kwargs)
         elif param.kind == param.VAR_POSITIONAL:
-            args = {'nargs': '*'}
+            kwargs = {'nargs': '*'}
             if param.annotation is not param.empty:
-                args['help'] = param.annotation
-            parser.add_argument(param.name, **args)
+                kwargs['help'] = param.annotation
+            parser.add_argument(param.name, **kwargs)
         elif param.kind == param.VAR_KEYWORD:
             msg = 'Variable length keyword arguments not supported'
             raise ValueError(msg)
@@ -109,7 +111,7 @@ def populate_parser(parser, defaults, funcsig):
 
 
 def create_parser(func, env_prefix=None, config_file=None, config_section=None,
-        sub_group=None, plugins=None, collector=None):
+        short_args=True, sub_group=None, plugins=None, collector=None):
     """Create and OptionParser object from a function definition.
 
     Use the function's signature to generate an OptionParser object. Default
@@ -137,7 +139,7 @@ def create_parser(func, env_prefix=None, config_file=None, config_section=None,
             subparser = subparsers.add_parser(subfunc.__name__,
                     conflict_handler='resolve', help=subfunc.__doc__)
             defaults.set_config_section(subfunc.__name__)
-            populate_parser(subparser, defaults, funcsig)
+            populate_parser(subparser, defaults, funcsig, short_args)
     have_extensions = False
     while hasattr(func, '__wrapped__') and not hasattr(func, '__signature__'):
         if isinstance(func, extensions.Extension):
@@ -147,7 +149,7 @@ def create_parser(func, env_prefix=None, config_file=None, config_section=None,
     funcsig = signature(func)
     if len(funcsig.parameters) == 0 and len(collector) == 0 and not have_extensions:
         return None
-    populate_parser(parser, defaults, funcsig)
+    populate_parser(parser, defaults, funcsig, short_args)
     return parser
 
 

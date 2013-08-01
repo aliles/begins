@@ -223,6 +223,24 @@ on the command line
 will cause running the program to
 print an error and exit.
 
+For programs that have
+a large number of options
+it may be preferrable to
+only use long options.
+To suppress short options,
+pass ``False`` as the
+``short_args`` keyword argument to
+the ``begin.start`` decorator::
+
+    >>> import begin
+    >>> @begin.start(short_args=False)
+    ... def run(name='Arther', quest='Holy Grail', colour='blue', *knights):
+    ...     "tis but a scratch!"
+
+This program will not
+accept ``-n``, ``-q`` or ``-c``
+as option names.
+
 ------------
 Sub-Commands
 ------------
