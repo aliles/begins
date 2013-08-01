@@ -170,6 +170,19 @@ def test_variable_positional_with_annotation(self):
         self.assertEqual(len(parser._action_groups), 3)
         self.assertIn('subcmd', parser.format_help())
 
+    def test_conflict_resoltion(self):
+        def main(help):
+            pass
+        parser = cmdline.create_parser(main)
+
+    def test_subcommand_conflict_resoltion(self):
+        @subcommands.subcommand
+        def subcmd(help):
+            pass
+        def main():
+            pass
+        parser = cmdline.create_parser(main)
+
 
 class TestApplyOptions(unittest.TestCase):
 
