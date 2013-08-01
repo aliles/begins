@@ -10,10 +10,16 @@ try:
 except ImportError:
     import unittest
 
+import pkg_resources
+
 import begin
 
 
 class TestStart(unittest.TestCase):
+
+    def tearDown(self):
+        for collector in begin.subcommands.COLLECTORS.values():
+            collector.clear()
 
     def test_start_false(self):
         # begin.start() return false outside __main__
@@ -175,6 +181,7 @@ class TestStart(unittest.TestCase):
             globals()['__name__'] = orig_name
 
     def test_subcommand(self):
+        epilogue = mock.Mock()
         target = mock.Mock()
         try:
             orig_argv= sys.argv
@@ -186,12 +193,55 @@ class TestStart(unittest.TestCase):
                 target()
             @begin.start
             def main():
-                pass
+                epilogue()
+            self.assertTrue(epilogue.called)
             self.assertTrue(target.called)
         finally:
             sys.argv = orig_argv
             globals()['__name__'] = orig_name
-            begin.subcommands.DEFAULT.clear()
+
+    def test_subcommand_group(self):
+        epilogue = mock.Mock()
+        target = mock.Mock()
+        try:
+            orig_argv= sys.argv
+            sys.argv = orig_argv[:1] + ['subcmd']
+            orig_name = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            @begin.subcommand(group='named.collector')
+            def subcmd():
+                target()
+            @begin.start(sub_group='named.collector')
+            def main():
+                epilogue()
+            self.assertTrue(epilogue.called)
+            self.assertTrue(target.called)
+        finally:
+            sys.argv = orig_argv
+            globals()['__name__'] = orig_name
+
+    @mock.patch('pkg_resources.iter_entry_points')
+    def test_plugins(self, iep):
+        epilogue = mock.Mock()
+        target = mock.Mock()
+        try:
+            orig_argv= sys.argv
+            sys.argv = orig_argv[:1] + ['subcmd']
+            orig_name = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            def subcmd():
+                target()
+            def entry_points(group, *args):
+                yield subcmd
+            iep.side_effect = entry_points
+            @begin.start(plugins='entry.points')
+            def main():
+                epilogue()
+            self.assertTrue(epilogue.called)
+            self.assertTrue(target.called)
+        finally:
+            sys.argv = orig_argv
+            globals()['__name__'] = orig_name
 
 
 if __name__ == '__main__':

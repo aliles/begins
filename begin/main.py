@@ -16,9 +16,12 @@ class Program(Wrapping):
     and start the program appropriately.
     """
 
-    def __init__(self, func, **kwargs):
+    def __init__(self, func, sub_group=None, collector=None, **kwargs):
         Wrapping.__init__(self, func)
-        self._parser = cmdline.create_parser(func, **kwargs)
+        self._group = sub_group
+        self._collector = collector
+        self._parser = cmdline.create_parser(func, sub_group=self._group,
+                collector=self._collector, **kwargs)
 
     def start(self, args=None):
         """Begin command line program
@@ -30,7 +33,8 @@ class Program(Wrapping):
         if self._parser is None:
             return self.__wrapped__()
         opts = self._parser.parse_args(args)
-        return cmdline.apply_options(self.__wrapped__, opts)
+        return cmdline.apply_options(self.__wrapped__, opts,
+                sub_group=self._group, collector=self._collector)
 
 
 def start(func=None, **kwargs):
@@ -85,7 +89,7 @@ def start(func=None, **kwargs):
     The environment variable 'PY_FIRST' will be used instead of 'FIRST'.
     """
     def _start(func):
-        prog= Program(func, **kwargs)
+        prog = Program(func, **kwargs)
         if func.__module__ == '__main__':
             prog.start()
         return prog

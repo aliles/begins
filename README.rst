@@ -230,7 +230,7 @@ Sub-Commands
 *begins* supports
 using functions as
 `sub-commands`_ with the
-``begin.subcommand`` decorator::
+``begin.subcommand()`` decorator::
 
     >>> import begin
     >>> @begin.subcommand                                    # doctest: +SKIP
@@ -270,6 +270,34 @@ the provided command line arguments.
 If a sub-command was chosen
 the associated function will
 also be called.
+
+Sub-commands can be
+registered with a
+specific named group by
+passing a ``group`` argument to
+the ``begin.subcommand`` decorator.
+The ``begin.start()`` decorator can
+use sub-commands from
+a named group by
+passing it a ``sub_group`` argument.
+
+Similarily, sub-commands can be
+load from `entry points`_ by
+passing the name
+of the entry point
+through the ``plugins`` argument
+to the ``begin.start()`` decorator::
+
+    >>> import begin
+    >>> @begin.start(plugins='begins.plugin.demo')
+    ... def main():
+    ...     pass
+
+Any functions from
+installed packages
+that are registered with
+the ``begins.plugin.demo`` entry point
+will be loaded as sub-commands.
 
 ---------------------
 Environment Variables

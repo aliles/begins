@@ -24,8 +24,8 @@ class TestBegins(unittest.TestCase):
             doctest.testfile('../README.rst')
         finally:
             sys.argv = original
-            begin.subcommands.DEFAULT.clear()
-            begin.subcommands.COLLECTORS.clear()
+            for collector in begin.subcommands.COLLECTORS.values():
+                collector.clear()
 
 
 if __name__ == '__main__':

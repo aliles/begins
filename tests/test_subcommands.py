@@ -14,8 +14,8 @@ import begin
 class TestSubCommand(unittest.TestCase):
 
     def tearDown(self):
-        begin.subcommands.DEFAULT.clear()
-        begin.subcommands.COLLECTORS.clear()
+        for collector in begin.subcommands.COLLECTORS.values():
+            collector.clear()
 
     def test_register_default(self):
         @begin.subcommand
@@ -24,7 +24,7 @@ class TestSubCommand(unittest.TestCase):
         @begin.subcommand
         def two():
             pass
-        self.assertEqual(list(begin.subcommands.DEFAULT.commands()), [one, two])
+        self.assertEqual(list(begin.subcommands.COLLECTORS[None].commands()), [one, two])
 
     def test_register_custom(self):
         collector = begin.subcommands.Collector()
@@ -49,23 +49,24 @@ class TestSubCommand(unittest.TestCase):
         @begin.subcommand
         def function():
             pass
-        self.assertIs(begin.subcommands.DEFAULT.get('function'), function)
+        self.assertIs(begin.subcommands.COLLECTORS[None].get('function'), function)
 
     @mock.patch('pkg_resources.iter_entry_points')
     def test_entry_points(self, iep):
         def function():
             pass
-        def entry_points(group, name):
+        def entry_points(group, *args):
             yield function
         iep.side_effect = entry_points
-        collector = begin.subcommands.Collector('group.name')
+        collector = begin.subcommands.Collector()
+        collector.load_plugins('entry.point')
         self.assertEqual(list(collector.commands()), [function])
 
     def test_named_collector(self):
         @begin.subcommand(group='named.collector')
         def function():
             pass
-        self.assertEqual(len(begin.subcommands.DEFAULT), 0)
+        self.assertEqual(len(begin.subcommands.COLLECTORS[None]), 0)
         self.assertIn('named.collector', begin.subcommands.COLLECTORS)
         self.assertIs(function,
                 begin.subcommands.COLLECTORS['named.collector']['function'])

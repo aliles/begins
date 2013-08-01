@@ -109,7 +109,7 @@ def populate_parser(parser, defaults, funcsig):
 
 
 def create_parser(func, env_prefix=None, config_file=None, config_section=None,
-        collector=subcommands.DEFAULT):
+        sub_group=None, plugins=None, collector=None):
     """Create and OptionParser object from a function definition.
 
     Use the function's signature to generate an OptionParser object. Default
@@ -126,6 +126,9 @@ def create_parser(func, env_prefix=None, config_file=None, config_section=None,
             conflict_handler='resolve',
             description = func.__doc__
     )
+    collector = collector if collector is not None else subcommands.COLLECTORS[sub_group]
+    if plugins is not None:
+        collector.load_plugins(plugins)
     if len(collector) > 0:
         subparsers = parser.add_subparsers(title='Available subcommands',
                 dest='_subcommand')
@@ -185,13 +188,14 @@ def call_function(func, funcsig, opts):
     return func(*pargs, **kwargs)
 
 
-def apply_options(func, opts, collector=subcommands.DEFAULT):
+def apply_options(func, opts, sub_group=None, collector=None):
     """Apply command line options to function and subcommands
 
     Call the target function, and any chosen subcommands, using the parsed
     command line arguments.
     """
     ext = func
+    collector = collector if collector is not None else subcommands.COLLECTORS[sub_group]
     while hasattr(ext, '__wrapped__') and not hasattr(ext, '__signature__'):
         if isinstance(ext, extensions.Extension):
             ext.run(opts)

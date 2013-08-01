@@ -9,6 +9,8 @@ try:
 except ImportError:
     import unittest
 
+import pkg_resources
+
 from begin import cmdline
 from begin import extensions
 from begin import subcommands
@@ -21,7 +23,8 @@ class Options(object):
 class TestCreateParser(unittest.TestCase):
 
     def tearDown(self):
-        subcommands.DEFAULT.clear()
+        for collector in subcommands.COLLECTORS.values():
+            collector.clear()
 
     def test_void_function(self):
         def main():
@@ -144,6 +147,29 @@ def test_variable_positional_with_annotation(self):
         self.assertEqual(len(parser._action_groups), 3)
         self.assertIn('subcmd', parser.format_help())
 
+    def test_subcommand_group(self):
+        @subcommands.subcommand(group='named.collector')
+        def subcmd():
+            pass
+        def main():
+            pass
+        parser = cmdline.create_parser(main, sub_group='named.collector')
+        self.assertEqual(len(parser._action_groups), 3)
+        self.assertIn('subcmd', parser.format_help())
+
+    @mock.patch('pkg_resources.iter_entry_points')
+    def test_plugins(self, iep):
+        def main():
+            pass
+        def subcmd():
+            pass
+        def entry_points(group, *args):
+            yield subcmd
+        iep.side_effect = entry_points
+        parser = cmdline.create_parser(main, plugins='entry.point')
+        self.assertEqual(len(parser._action_groups), 3)
+        self.assertIn('subcmd', parser.format_help())
+
 
 class TestApplyOptions(unittest.TestCase):
 
@@ -151,7 +177,8 @@ class TestApplyOptions(unittest.TestCase):
         self.opts = Options()
 
     def tearDown(self):
-        subcommands.DEFAULT.clear()
+        for collector in subcommands.COLLECTORS.values():
+            collector.clear()
 
     def test_void_function(self):
         def main():
@@ -241,6 +268,16 @@ def test_keyword_only(self):
             return 'red'
         self.opts._subcommand = 'subcmd'
         value = cmdline.apply_options(main, self.opts)
+        self.assertEqual('blue', value)
+
+    def test_subcommand_group(self):
+        @subcommands.subcommand(group='named.collector')
+        def subcmd():
+            return 'blue'
+        def main():
+            return 'red'
+        self.opts._subcommand = 'subcmd'
+        value = cmdline.apply_options(main, self.opts, sub_group='named.collector')
         self.assertEqual('blue', value)
 
 

@@ -1,4 +1,5 @@
 "Subcommand support for command lines"
+from collections import defaultdict
 
 try:
     from collections.abc import MutableMapping
@@ -11,16 +12,13 @@ import pkg_resources
 class Collector(dict):
     """Collect functions for use as subcommands"""
 
-    def __init__(self, group=None):
-        dict.__init__(self)
-        if group is None:
-            return
-        for func in pkg_resources.iter_entry_points(group=group, name=None):
-            self.register(func)
-
     def commands(self):
         for name in sorted(self):
             yield self[name]
+
+    def load_plugins(self, entry_point):
+        for func in pkg_resources.iter_entry_points(group=entry_point):
+            self.register(func)
 
     def register(self, func):
         if func.__name__ in self:
@@ -39,16 +37,10 @@ def subcommand(func=None, group=None, collector=None):
     def wrapper(func):
         collector.register(func)
         return func
-    if group is not None:
-        if group not in COLLECTORS:
-            COLLECTORS[group] = Collector(group)
-        collector = COLLECTORS[group]
-    else:
-        collector = DEFAULT if collector is None else collector
+    collector = COLLECTORS[group] if collector is None else collector
     if func is not None:
         return wrapper(func)
     return wrapper
 
 
-DEFAULT = Collector()
-COLLECTORS = {}
+COLLECTORS = defaultdict(Collector)
