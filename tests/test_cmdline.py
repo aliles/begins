@@ -189,6 +189,19 @@ def test_variable_positional_with_annotation(self):
         parser = cmdline.create_parser(main, short_args=False)
         self.assertNotIn(' -a ', parser.format_help())
 
+    def test_subcommand_description(self):
+        @subcommands.subcommand
+        def subcmd():
+            """SUBCOMMAND_HELP
+
+            SUBCOMMAND_DESC
+            """
+        def main():
+            pass
+        parser = cmdline.create_parser(main)
+        self.assertIn('SUBCOMMAND_HELP', parser.format_help())
+        self.assertNotIn('SUBCOMMAND_DESC', parser.format_help())
+
 
 class TestApplyOptions(unittest.TestCase):
 

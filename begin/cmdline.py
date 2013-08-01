@@ -136,8 +136,11 @@ def create_parser(func, env_prefix=None, config_file=None, config_section=None,
                 dest='_subcommand')
         for subfunc in collector.commands():
             funcsig  = signature(subfunc)
-            subparser = subparsers.add_parser(subfunc.__name__,
-                    conflict_handler='resolve', help=subfunc.__doc__)
+            help = None
+            if subfunc.__doc__ is not None:
+                help = subfunc.__doc__.splitlines()[0]
+            subparser = subparsers.add_parser(subfunc.__name__, help=help,
+                    conflict_handler='resolve', description=subfunc.__doc__)
             defaults.set_config_section(subfunc.__name__)
             populate_parser(subparser, defaults, funcsig, short_args)
     have_extensions = False
