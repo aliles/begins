@@ -90,13 +90,13 @@ class Logging(Extension):
     def run(self, opts):
         "Configure logging module according to command line options"
         # log level
-        level = 'INFO'
+        level = logging.INFO
         if opts.loglvl is not None:
-            level = opts.loglvl
+            level = logging._levelNames[opts.loglvl]
         elif opts.verbose:
-            level = 'DEBUG'
+            level = logging.DEBUG
         elif opts.quiet:
-            level = 'WARNING'
+            level = logging.WARNING
         # logger
         logger = logging.getLogger()
         for handler in logger.handlers:
