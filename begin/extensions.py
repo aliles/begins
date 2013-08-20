@@ -92,7 +92,7 @@ class Logging(Extension):
         # log level
         level = logging.INFO
         if opts.loglvl is not None:
-            level = logging._levelNames[opts.loglvl]
+            level = logging.getLevelName(opts.loglvl)
         elif opts.verbose:
             level = logging.DEBUG
         elif opts.quiet:
