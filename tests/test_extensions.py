@@ -120,7 +120,7 @@ class TestLoging(unittest.TestCase):
         self.logs.run(self.opts)
         self.assertTrue(getlogger.called)
         logger = getlogger.return_value
-        logger.setLevel.assert_called_once_with('INFO')
+        logger.setLevel.assert_called_once_with(logging.getLevelName('INFO'))
         self.assertTrue(logger.addHandler.called)
         self.assertIsInstance(logger.addHandler.call_args[0][0],
                 logging.StreamHandler)
@@ -131,7 +131,7 @@ class TestLoging(unittest.TestCase):
         self.logs.run(self.opts)
         self.assertTrue(getlogger.called)
         logger = getlogger.return_value
-        logger.setLevel.assert_called_once_with('DEBUG')
+        logger.setLevel.assert_called_once_with(logging.getLevelName('DEBUG'))
 
     @mock.patch('logging.getLogger')
     def test_run_quiet(self, getlogger):
@@ -139,7 +139,7 @@ class TestLoging(unittest.TestCase):
         self.logs.run(self.opts)
         self.assertTrue(getlogger.called)
         logger = getlogger.return_value
-        logger.setLevel.assert_called_once_with('WARNING')
+        logger.setLevel.assert_called_once_with(logging.getLevelName('WARNING'))
 
     @mock.patch('logging.getLogger')
     def test_run_loglvl(self, getlogger):
@@ -147,7 +147,7 @@ class TestLoging(unittest.TestCase):
         self.logs.run(self.opts)
         self.assertTrue(getlogger.called)
         logger = getlogger.return_value
-        logger.setLevel.assert_called_once_with('ERROR')
+        logger.setLevel.assert_called_once_with(logging.getLevelName('ERROR'))
 
     @mock.patch('logging.getLogger')
     def test_run_reinitialise(self, getlogger):
