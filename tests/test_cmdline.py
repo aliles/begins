@@ -189,6 +189,14 @@ def test_variable_positional_with_annotation(self):
         parser = cmdline.create_parser(main, short_args=False)
         self.assertNotIn(' -a ', parser.format_help())
 
+    def test_lexical_order(self):
+        def main(zeta, alpha, delta):
+            pass
+        parser = cmdline.create_parser(main, lexical_order=True)
+        self.assertEqual(parser._optionals._actions[1].dest, 'alpha')
+        self.assertEqual(parser._optionals._actions[2].dest, 'delta')
+        self.assertEqual(parser._optionals._actions[3].dest, 'zeta')
+
     def test_subcommand_description(self):
         @subcommands.subcommand
         def subcmd():

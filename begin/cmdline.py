@@ -71,14 +71,17 @@ class DefaultsManager(object):
         self._section = section
 
 
-def populate_parser(parser, defaults, funcsig, short_args):
+def populate_parser(parser, defaults, funcsig, short_args, lexical_order):
     """Populate parser according to function signature
 
     Use the parameters accepted by the source function, according to the
     functions signature provided, to populating a corresponding command line
     argument parser.
     """
-    for param in funcsig.parameters.values():
+    params = funcsig.parameters.values()
+    if lexical_order:
+        params = sorted(params, key=lambda p: p.name)
+    for param in params:
         if param.kind == param.POSITIONAL_OR_KEYWORD or \
                 param.kind == param.KEYWORD_ONLY or \
                 param.kind == param.POSITIONAL_ONLY:
@@ -111,7 +114,8 @@ def populate_parser(parser, defaults, funcsig, short_args):
 
 
 def create_parser(func, env_prefix=None, config_file=None, config_section=None,
-        short_args=True, sub_group=None, plugins=None, collector=None):
+        short_args=True, lexical_order=False, sub_group=None, plugins=None,
+        collector=None):
     """Create and OptionParser object from a function definition.
 
     Use the function's signature to generate an OptionParser object. Default
@@ -142,7 +146,7 @@ def create_parser(func, env_prefix=None, config_file=None, config_section=None,
             subparser = subparsers.add_parser(subfunc.__name__, help=help,
                     conflict_handler='resolve', description=subfunc.__doc__)
             defaults.set_config_section(subfunc.__name__)
-            populate_parser(subparser, defaults, funcsig, short_args)
+            populate_parser(subparser, defaults, funcsig, short_args, lexical_order)
     have_extensions = False
     while hasattr(func, '__wrapped__') and not hasattr(func, '__signature__'):
         if isinstance(func, extensions.Extension):
@@ -152,7 +156,7 @@ def create_parser(func, env_prefix=None, config_file=None, config_section=None,
     funcsig = signature(func)
     if len(funcsig.parameters) == 0 and len(collector) == 0 and not have_extensions:
         return None
-    populate_parser(parser, defaults, funcsig, short_args)
+    populate_parser(parser, defaults, funcsig, short_args, lexical_order)
     return parser
 
 

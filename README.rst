@@ -241,6 +241,26 @@ This program will not
 accept ``-n``, ``-q`` or ``-c``
 as option names.
 
+Similarity, a large number of
+command line options may
+be better displayed in
+alphabetical order.
+This can be achieved
+by passing ``lexical_order``
+as ``True``::
+
+    >>> import begin
+    >>> @begin.start(lexical_order=True)
+    ... def main(charlie=3, alpha=1, beta=2):
+    ...     pass
+
+This program will list
+the command line options as
+``alpha``, ``beta``, ``charlie``
+instead of the order
+in which the function
+accepts them.
+
 ------------
 Sub-Commands
 ------------
