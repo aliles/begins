@@ -20,6 +20,36 @@ class Options(object):
     pass
 
 
+class TestProgramName(unittest.TestCase):
+
+    def setUp(self):
+        self.ordir = os.path.abspath(os.curdir)
+        os.chdir('./tests')
+
+    def tearDown(self):
+        os.chdir(self.ordir)
+
+    def test_simple_script(self):
+        def func():
+            pass
+        prog = cmdline.program_name('main.py', func)
+        self.assertEqual(prog, 'main.py')
+
+    def test_main_module(self):
+        def func():
+            pass
+        prog = cmdline.program_name('__main__.py', func)
+        self.assertEqual(prog, 'tests')
+
+    @mock.patch('os.path.split')
+    def test_unusable_path(self, psplit):
+        psplit.return_value = ('', '__main__.py')
+        def func():
+            pass
+        prog = cmdline.program_name('__main__.py', func)
+        self.assertEqual(prog, 'func')
+
+
 class TestCreateParser(unittest.TestCase):
 
     def tearDown(self):

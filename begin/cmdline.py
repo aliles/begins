@@ -71,6 +71,21 @@ class DefaultsManager(object):
         self._section = section
 
 
+def program_name(filename, func):
+    """Choose program name for application
+
+    Iterate backwards through absolute path for application looking for first
+    name that is not a magic variable.
+    """
+    fullpath = os.path.abspath(filename)
+    basename, filename = os.path.split(fullpath)
+    while len(basename) > 0:
+        if not filename.startswith('__'):
+            return filename
+        basename, filename = os.path.split(basename)
+    return func.__name__
+
+
 def populate_parser(parser, defaults, funcsig, short_args, lexical_order):
     """Populate parser according to function signature
 
@@ -128,6 +143,7 @@ def create_parser(func, env_prefix=None, config_file=None, config_section=None,
     """
     defaults = DefaultsManager(env_prefix, config_file, func.__name__)
     parser = argparse.ArgumentParser(
+            prog=program_name(sys.argv[0], func),
             argument_default=NODEFAULT,
             conflict_handler='resolve',
             description = func.__doc__
