@@ -28,7 +28,7 @@ setup(
     author="Aaron Iles",
     author_email="aaron.iles@gmail.com",
     url="http://begins.readthedocs.org",
-    description="Command line programs for lazy humans",
+    description="Command line programs for busy developers",
     long_description=open('README.rst').read(),
     license="ASL",
     classifiers = [
