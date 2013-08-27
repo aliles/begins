@@ -243,6 +243,41 @@ class TestStart(unittest.TestCase):
             sys.argv = orig_argv
             globals()['__name__'] = orig_name
 
+    @mock.patch('sys.exit')
+    def test_keyboard_interrupt_main(self, exit):
+        try:
+            orig_argv= sys.argv
+            sys.argv = orig_argv[:1]
+            orig_name = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            @begin.start
+            def main():
+                raise KeyboardInterrupt
+            self.assertTrue(exit.called)
+            self.assertGreater(exit.call_args[0][0], 0)
+        finally:
+            sys.argv = orig_argv
+            globals()['__name__'] = orig_name
+
+    @mock.patch('sys.exit')
+    def test_keyboard_interrupt_subcommand(self, exit):
+        try:
+            orig_argv= sys.argv
+            sys.argv = orig_argv[:1] + ['subcmd']
+            orig_name = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            @begin.subcommand
+            def subcmd():
+                raise KeyboardInterrupt
+            @begin.start
+            def main():
+                pass
+            self.assertTrue(exit.called)
+            self.assertGreater(exit.call_args[0][0], 0)
+        finally:
+            sys.argv = orig_argv
+            globals()['__name__'] = orig_name
+
 
 if __name__ == '__main__':
     unittest.begin()

@@ -1,6 +1,7 @@
 "Syntactic sugar for a programs 'main'."
 from __future__ import absolute_import, division, print_function
 import inspect
+import sys
 
 from begin.wrappable import Wrapping
 from begin import cmdline
@@ -30,11 +31,14 @@ class Program(Wrapping):
         initially started. New arguments can be passed through the args
         parameter.
         """
-        if self._parser is None:
-            return self.__wrapped__()
-        opts = self._parser.parse_args(args)
-        return cmdline.apply_options(self.__wrapped__, opts,
-                sub_group=self._group, collector=self._collector)
+        try:
+            if self._parser is None:
+                return self.__wrapped__()
+            opts = self._parser.parse_args(args)
+            return cmdline.apply_options(self.__wrapped__, opts,
+                    sub_group=self._group, collector=self._collector)
+        except KeyboardInterrupt:
+            sys.exit(1)
 
 
 def start(func=None, **kwargs):
