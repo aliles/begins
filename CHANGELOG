@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+Next release 0.7
+````````````````
+* New utility functions tofile and tolist
+
 0.6 (2013-08-27)
 ````````````````
 * Allow listing of optins in alphabetical order
