@@ -32,8 +32,6 @@ class Program(Wrapping):
         parameter.
         """
         try:
-            if self._parser is None:
-                return self.__wrapped__()
             opts = self._parser.parse_args(args)
             return cmdline.apply_options(self.__wrapped__, opts,
                     sub_group=self._group, collector=self._collector)

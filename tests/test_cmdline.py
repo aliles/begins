@@ -60,7 +60,8 @@ class TestCreateParser(unittest.TestCase):
         def main():
             pass
         parser = cmdline.create_parser(main)
-        self.assertIs(parser, None)
+        self.assertEqual(len(parser._optionals._actions), 1)
+        self.assertEqual(parser._optionals._actions[0].dest, 'help')
 
     def test_positional_arguments(self):
         def main(a, b, c):

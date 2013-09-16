@@ -44,7 +44,9 @@ class TestStart(unittest.TestCase):
     def test_decorate_true(self):
         target = mock.Mock()
         try:
-            original = globals()['__name__']
+            orig_argv= sys.argv
+            sys.argv = orig_argv[:1]
+            orig_name = globals()['__name__']
             globals()['__name__'] = "__main__"
             @begin.start
             def main():
@@ -52,7 +54,8 @@ class TestStart(unittest.TestCase):
             self.assertTrue(target.called)
             self.assertEqual(target.call_args[0], tuple())
         finally:
-            globals()['__name__'] = original
+            sys.argv = orig_argv
+            globals()['__name__'] = orig_name
 
     def test_decorate_callable(self):
         target = mock.Mock()
@@ -64,11 +67,16 @@ class TestStart(unittest.TestCase):
 
     def test_entry_point(self):
         target = mock.Mock()
-        @begin.start
-        def main():
-            target()
-        main.start()
-        self.assertTrue(target.called)
+        try:
+            orig_argv= sys.argv
+            sys.argv = orig_argv[:1]
+            @begin.start
+            def main():
+                target()
+            main.start()
+            self.assertTrue(target.called)
+        finally:
+            sys.argv = orig_argv
 
     def test_command_line(self):
         target = mock.Mock()

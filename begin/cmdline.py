@@ -170,8 +170,6 @@ def create_parser(func, env_prefix=None, config_file=None, config_section=None,
             have_extensions = True
         func = getattr(func, '__wrapped__')
     funcsig = signature(func)
-    if len(funcsig.parameters) == 0 and len(collector) == 0 and not have_extensions:
-        return None
     populate_parser(parser, defaults, funcsig, short_args, lexical_order)
     return parser
 
