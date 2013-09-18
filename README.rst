@@ -54,7 +54,7 @@ the `argparse`_ package from the
 also required.
 
 Both of these dependencies are
-listed in the package configurtion.
+listed in the package configuration.
 If using `Pip`_ to
 install *begins* then
 the required dependencies will
@@ -81,7 +81,7 @@ $ pip install git+https://github.com/aliles/begins.git
 Please note that
 *begins* is still in
 an alpha state 
-and therfore
+and therefore
 the API or behaviour
 could change.
 
@@ -130,7 +130,7 @@ a decorator looks like::
     ... def run():
     ...     pass
 
-By defering the execution
+By deferring the execution
 of the function until after
 the remainder of the module has loaded
 ensures the main function doesn't fail
@@ -141,7 +141,7 @@ defined in later code.
 Parsing command line options
 ----------------------------
 
-If ``begin.start()`` deocrates a
+If ``begin.start()`` decorates a
 function accepts parameters
 ``begin.start()`` will
 process the command for
@@ -174,7 +174,7 @@ command line help::
                            (default: blue)
 
 In Python3, any `function annotations`_
-for a paramter become
+for a parameter become
 the command line option help.
 For example::
 
@@ -216,7 +216,7 @@ the decorated function
 an exception
 will be raised.
 
-If a paramater
+If a parameter
 does not have a default,
 failing to pass a value
 on the command line
@@ -225,7 +225,7 @@ print an error and exit.
 
 For programs that have
 a large number of options
-it may be preferrable to
+it may be preferable to
 only use long options.
 To suppress short options,
 pass ``False`` as the
@@ -319,7 +319,7 @@ use sub-commands from
 a named group by
 passing it a ``sub_group`` argument.
 
-Similarily, sub-commands can be
+Similarly, sub-commands can be
 load from `entry points`_ by
 passing the name
 of the entry point
@@ -349,7 +349,7 @@ The enable multiple sub-commands
 a command separator value needs
 to be passed to be
 passed to ``begin.start()``
-as the ``cmd_delim`` paramater::
+as the ``cmd_delim`` parameter::
 
     >>> import begin
     >>> @begin.subcommand                                    # doctest: +SKIP
@@ -378,7 +378,7 @@ command line options.
 To use environment variables
 pass a prefix string to
 the ``begin.start()`` decorator through
-the ``env_prefix`` paramater::
+the ``env_prefix`` parameter::
 
     >>> import begin
     >>> @begin.start(env_prefix='MP_')
@@ -408,7 +408,7 @@ command line options.
 To use configuration files
 pass a base file name to
 the ``begin.start()`` decorator through
-the ``config_file`` paramater::
+the ``config_file`` parameter::
 
     >>> import begin
     >>> @begin.start(config_file='.camelot.cfg')
@@ -416,7 +416,7 @@ the ``config_file`` paramater::
     ...     "tis but a scratch!"
 
 This example will
-look for config files named
+look for configuration files named
 ``.camelot.cfg`` in
 the current directory and/or
 the user's home directory.
@@ -424,14 +424,14 @@ A command line option's
 default value can be
 changed by an
 option value in
-a config file.
-The config section
+a configuration file.
+The configuration section
 used matches the
 decorated function's name
 by default.
 This can be changed by
 passing a ``config_section``
-paramater to ``begin.start()``::
+parameter to ``begin.start()``::
 
     >>> import begin
     >>> @begin.start(config_file='.camelot.cfg', config_section='camelot')
@@ -480,7 +480,7 @@ These functions are used
 to convert the
 types of arguments.
 
-Rewritting the example above using
+Rewriting the example above using
 the ``begin.convert()`` decorator::
 
     >>> import begin
@@ -550,7 +550,7 @@ unhandled exceptions.
 
 Traceback options may
 also be set using
-config files,
+configuration files,
 if `Configuration files`_
 are supported.
 The follow options
@@ -601,7 +601,7 @@ defaults to ``INFO``.
 It can be adjusted
 by passing ``--quiet``,
 ``--verbose`` or
-explicity using ``--loglvl``.
+explicitly using ``--loglvl``.
 
 The default log format
 depends on whether
@@ -625,7 +625,7 @@ the ``--logfmt`` option.
 
 Logging options may
 also be set using
-config files,
+configuration files,
 if `Configuration files`_
 are supported.
 The follow options
@@ -679,7 +679,7 @@ Issues
 ------
 
 Any bug reports or
-freature requests can
+feature requests can
 be made using GitHub' `issues system`_.
 
 .. _Github: https://github.com/aliles/begins
