@@ -338,6 +338,36 @@ the ``begins.plugin.demo`` entry point
 will be loaded as sub-commands.
 
 ---------------------
+Multiple Sub-Commands
+---------------------
+
+Some commands may benefit
+from being able to be called with
+multiple subcommands on
+the command line.
+The enable multiple sub-commands
+a command separator value needs
+to be passed to be
+passed to ``begin.start()``
+as the ``cmd_delim`` paramater::
+
+    >>> import begin
+    >>> @begin.subcommand                                    # doctest: +SKIP
+    ... def subcmd():
+    ...     pass
+    ...
+    >>> @begin.start(cmd_delim='--')
+    ... def main():
+    ...     pass
+
+When this program is called
+from the command line
+multiple instances of the
+sub-command may be called
+if separated by the
+command delimiter ``--``.
+
+---------------------
 Environment Variables
 ---------------------
 

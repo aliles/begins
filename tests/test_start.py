@@ -228,6 +228,24 @@ class TestStart(unittest.TestCase):
             sys.argv = orig_argv
             globals()['__name__'] = orig_name
 
+    def test_multiple_subcommand(self):
+        target = mock.Mock()
+        try:
+            orig_argv= sys.argv
+            sys.argv = orig_argv[:1] + ['subcmd', '--', 'subcmd', '--', 'subcmd']
+            orig_name = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            @begin.subcommand
+            def subcmd():
+                target()
+            @begin.start(cmd_delim='--')
+            def main():
+                pass
+            self.assertEqual(target.call_count, 3)
+        finally:
+            sys.argv = orig_argv
+            globals()['__name__'] = orig_name
+
     @mock.patch('pkg_resources.iter_entry_points')
     def test_plugins(self, iep):
         epilogue = mock.Mock()

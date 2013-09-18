@@ -1,6 +1,7 @@
 "Syntactic sugar for a programs 'main'."
 from __future__ import absolute_import, division, print_function
 import inspect
+import itertools
 import sys
 
 from begin.wrappable import Wrapping
@@ -17,10 +18,11 @@ class Program(Wrapping):
     and start the program appropriately.
     """
 
-    def __init__(self, func, sub_group=None, collector=None, **kwargs):
+    def __init__(self, func, sub_group=None, collector=None, cmd_delim=None, **kwargs):
         Wrapping.__init__(self, func)
         self._group = sub_group
         self._collector = collector
+        self._cmd_delim = cmd_delim
         self._parser = cmdline.create_parser(func, sub_group=self._group,
                 collector=self._collector, **kwargs)
 
@@ -31,12 +33,22 @@ class Program(Wrapping):
         initially started. New arguments can be passed through the args
         parameter.
         """
-        try:
-            opts = self._parser.parse_args(args)
-            return cmdline.apply_options(self.__wrapped__, opts,
-                    sub_group=self._group, collector=self._collector)
-        except KeyboardInterrupt:
-            sys.exit(1)
+        rvalue = None
+        commands = [[]]
+        args = args if args is not None else sys.argv[1:]
+        if len(args) > 0:
+            commands = [list(group) for key, group in itertools.groupby(args, lambda x: x == self._cmd_delim) if not key]
+        options = []
+        for command in commands:
+            opts = self._parser.parse_args(command)
+            options.append(opts)
+        for opts in options:
+            try:
+                rvalue = cmdline.apply_options(self.__wrapped__, opts,
+                        sub_group=self._group, collector=self._collector)
+            except KeyboardInterrupt:
+                sys.exit(1)
+        return rvalue
 
 
 def start(func=None, **kwargs):
