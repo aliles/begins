@@ -6,6 +6,7 @@ Next release 0.7
 * New utility functions tofile and tolist
 * Fix bug prevent help output with main function that takes on arguments
 * Multiple subcommands support can be enabled with cmd_delim
+* Context object available to main and subcommand functions for storing state
 
 0.6 (2013-08-27)
 ````````````````

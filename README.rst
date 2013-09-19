@@ -367,6 +367,35 @@ sub-command may be called
 if separated by the
 command delimiter ``--``.
 
+-------------------
+Sub-Command Context
+-------------------
+
+There are use cases where
+it is desirable to pass
+state from the main function to
+a subsequent sub-command.
+To support this Begins provides
+the ``begin.context`` object.
+This object will have the
+following properties:
+
+* ``return_value``, value returned by previous command function.
+* ``opts_previous``, iterable of options object used by previous commands.
+* ``opts_current``, options object for current command.
+* ``opts_next``, iterable of options object for following commands.
+
+Any other properties set
+on the ``begin.context`` object
+will not be altered by begins.
+
+The ``return_value`` property
+will be set if the
+value returned from a
+main function or
+sub-command function is
+not the ``None`` object.
+
 ---------------------
 Environment Variables
 ---------------------

@@ -13,8 +13,7 @@ try:
 except ImportError:
     from funcsigs import signature
 
-from begin import extensions
-from begin import subcommands
+from begin import context, extensions, subcommands
 
 __all__ = ['create_parser', 'populate_parser',
            'apply_options', 'call_function']
@@ -224,8 +223,12 @@ def apply_options(func, opts, sub_group=None, collector=None):
         if isinstance(ext, extensions.Extension):
             ext.run(opts)
         ext = getattr(ext, '__wrapped__')
-    result = call_function(func, signature(ext), opts)
+    return_value = call_function(func, signature(ext), opts)
+    if return_value is not None:
+        context.return_value = return_value
     if hasattr(opts, '_subcommand'):
         subfunc = collector.get(opts._subcommand)
-        result = call_function(subfunc, signature(subfunc), opts)
-    return result
+        return_value = call_function(subfunc, signature(subfunc), opts)
+        if return_value is not None:
+            context.return_value = return_value
+    return context.return_value

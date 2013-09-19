@@ -5,7 +5,7 @@ import itertools
 import sys
 
 from begin.wrappable import Wrapping
-from begin import cmdline
+from begin import cmdline, context
 
 __all__ = ['start']
 
@@ -33,7 +33,6 @@ class Program(Wrapping):
         initially started. New arguments can be passed through the args
         parameter.
         """
-        rvalue = None
         commands = [[]]
         args = args if args is not None else sys.argv[1:]
         if len(args) > 0:
@@ -42,13 +41,20 @@ class Program(Wrapping):
         for command in commands:
             opts = self._parser.parse_args(command)
             options.append(opts)
+        context.return_value = None
+        context.opts_previous = tuple()
+        context.opts_next = tuple(options)
         for opts in options:
+            context.opts_next = context.opts_next[1:]
+            context.opts_current = opts
             try:
-                rvalue = cmdline.apply_options(self.__wrapped__, opts,
-                        sub_group=self._group, collector=self._collector)
+                context.return_value = cmdline.apply_options(self.__wrapped__,
+                        opts, sub_group=self._group, collector=self._collector)
             except KeyboardInterrupt:
                 sys.exit(1)
-        return rvalue
+            context.opts_previous = context.opts_previous + (opts,)
+        context.opts_current = None
+        return context.return_value
 
 
 def start(func=None, **kwargs):
