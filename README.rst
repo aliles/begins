@@ -522,6 +522,40 @@ The module ``begin.utils`` contains
 useful functions for
 converting argument types.
 
+Automatic casting
+-----------------
+
+For simple, built-in types
+*begins* can automatically
+type cast arguments.
+This is achieved by
+passing the parameter
+``_automatic`` to ``begin.convert()``::
+
+    >>> import begin
+    >>> @begin.start
+    >>> @begin.convert(_automatic=True)
+    ... def main(host='127.0.0.1', port=8080, debug=False):
+    ...     "Run web application"
+
+This example is
+functionally equivalent to
+the example above.
+
+Automatic type casting
+works for the following
+built-in types.
+
+* ``int`` or ``long``
+* ``float``
+* ``boolean``
+* ``tuple`` or ``list``
+
+Additional casting functions
+can be provided with
+the same call to the
+``begin.convert()`` decorator.
+
 -----------------------
 Command Line Extensions
 -----------------------

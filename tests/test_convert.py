@@ -3,6 +3,11 @@ import mock
 import sys
 
 try:
+    from collections.abc import Sequence
+except ImportError:
+    from collections import Sequence
+
+try:
     import unittest2 as unittest
 except ImportError:
     import unittest
@@ -83,3 +88,48 @@ def test_keyword_only(self):
     self.assertEqual(target.call_args[0], (None, 1.1))
     self.assertIsInstance(target.call_args[0][1], float)
 """)
+
+    def test_automatic_integer(self):
+        target = mock.Mock()
+        @begin.convert(_automatic=True)
+        def func(number=0):
+            target(number)
+        func('1')
+        self.assertIsInstance(target.call_args[0][0], int)
+        self.assertEqual(target.call_args[0][0], 1)
+
+    def test_automatic_float(self):
+        target = mock.Mock()
+        @begin.convert(_automatic=True)
+        def func(number=0.0):
+            target(number)
+        func('1')
+        self.assertIsInstance(target.call_args[0][0], float)
+        self.assertEqual(target.call_args[0][0], 1.0)
+
+    def test_automatic_boolean(self):
+        target = mock.Mock()
+        @begin.convert(_automatic=True)
+        def func(boolean=False):
+            target(boolean)
+        func('True')
+        self.assertIsInstance(target.call_args[0][0], bool)
+        self.assertEqual(target.call_args[0][0], True)
+
+    def test_automatic_tuple(self):
+        target = mock.Mock()
+        @begin.convert(_automatic=True)
+        def func(sequence=()):
+            target(sequence)
+        func('a,b')
+        self.assertIsInstance(target.call_args[0][0], Sequence)
+        self.assertSequenceEqual(target.call_args[0][0], ('a', 'b'))
+
+    def test_automatic_list(self):
+        target = mock.Mock()
+        @begin.convert(_automatic=True)
+        def func(sequence=[]):
+            target(sequence)
+        func('a,b')
+        self.assertIsInstance(target.call_args[0][0], Sequence)
+        self.assertSequenceEqual(target.call_args[0][0], ('a', 'b'))

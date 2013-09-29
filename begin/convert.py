@@ -1,16 +1,31 @@
 "Type casting for function arguments"
 from __future__ import absolute_import, division, print_function
 import functools
+import sys
 
 try:
     from inspect import signature
 except ImportError:
     from funcsigs import signature
 
+from begin import utils
+
 __all__ = ['convert']
 
 
-def convert(**mappings):
+CONVERTERS = {
+        int: int,
+        float: float,
+        bool: utils.tobool,
+        tuple: utils.tolist,
+        list: utils.tolist,
+}
+
+if sys.version_info[0] < 3:
+    CONVERTERS[long] = long
+
+
+def convert(_automatic=False, **mappings):
     """Cast function arguments to decorated function.
 
     Optionally use callables to cast the arguments for the decorated functions.
@@ -39,6 +54,13 @@ def convert(**mappings):
         while hasattr(target, '__wrapped__'):
             target = getattr(func, '__wrapped__')
         sig = signature(target)
+        if _automatic:
+            for param in sig.parameters.values():
+                if param.name in mappings or param.default is param.empty:
+                    continue
+                converter = CONVERTERS.get(type(param.default))
+                if converter:
+                    mappings[param.name] = converter
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             args = list(args)
