@@ -1,6 +1,15 @@
 """Utility functions for begins"""
-from distutils.util import strtobool as tobool
+from distutils.util import strtobool as _tobool
 from argparse import FileType as tofile
+
+def tobool(value):
+    """Convert a string representation of truth to True or False.
+
+    True values are 'y', 'yes', 't', 'true', 'on', and '1'; false values
+    are 'n', 'no', 'f', 'false', 'off', and '0'.  Raises ValueError if
+    'value' is anything else.
+    """
+    return bool(_tobool(value))
 
 def tolist(value=None, sep=',', empty_strings=False):
     """Convert a string to a list.
