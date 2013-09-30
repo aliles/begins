@@ -338,6 +338,23 @@ class TestStart(unittest.TestCase):
             sys.argv = orig_argv
             globals()['__name__'] = orig_name
 
+    def test_automatic_convert(self):
+        target = mock.Mock()
+        try:
+            orig_argv= sys.argv
+            sys.argv = orig_argv[:1] + ['-a', '1']
+            orig_name = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            @begin.start(auto_convert=True)
+            def main(a=0):
+                target(a)
+            self.assertTrue(target.called)
+            self.assertEqual(target.call_args[0], (1,))
+            self.assertIsInstance(target.call_args[0][0], int)
+        finally:
+            sys.argv = orig_argv
+            globals()['__name__'] = orig_name
+
 
 if __name__ == '__main__':
     unittest.begin()

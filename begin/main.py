@@ -5,7 +5,7 @@ import itertools
 import sys
 
 from begin.wrappable import Wrapping
-from begin import cmdline, context
+from begin import cmdline, context, convert
 
 __all__ = ['start']
 
@@ -18,11 +18,14 @@ class Program(Wrapping):
     and start the program appropriately.
     """
 
-    def __init__(self, func, sub_group=None, collector=None, cmd_delim=None, **kwargs):
+    def __init__(self, func, auto_convert=False, cmd_delim=None,
+            sub_group=None, collector=None, **kwargs):
+        if auto_convert:
+            func = convert(_automatic=True)(func)
         Wrapping.__init__(self, func)
+        self._cmd_delim = cmd_delim
         self._group = sub_group
         self._collector = collector
-        self._cmd_delim = cmd_delim
         self._parser = cmdline.create_parser(func, sub_group=self._group,
                 collector=self._collector, **kwargs)
 

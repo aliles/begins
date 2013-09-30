@@ -556,6 +556,26 @@ can be provided with
 the same call to the
 ``begin.convert()`` decorator.
 
+Alternatively, use of
+``begin.convert()`` can be
+dispensed by passing True
+to ``begin.start()`` via
+the ``auto_convert`` parameter::
+
+    >>> import begin
+    >>> @begin.start(auto_convert=True)
+    ... def main(host='127.0.0.1', port=8080, debug=False):
+    ...     "Run web application"
+
+Again, this example is
+functionally equivalent to
+the example above.
+
+The limitation of using
+``auto_convert`` is that
+it is not longer possible to
+provide additional casting functions.
+
 -----------------------
 Command Line Extensions
 -----------------------
