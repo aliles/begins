@@ -534,7 +534,7 @@ passing the parameter
 
     >>> import begin
     >>> @begin.start
-    >>> @begin.convert(_automatic=True)
+    ... @begin.convert(_automatic=True)
     ... def main(host='127.0.0.1', port=8080, debug=False):
     ...     "Run web application"
 
