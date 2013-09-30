@@ -98,6 +98,18 @@ def test_keyword_only(self):
         self.assertIsInstance(target.call_args[0][0], int)
         self.assertEqual(target.call_args[0][0], 1)
 
+    if sys.version_info[0] < 3:
+        exec("""
+def test_automatic_long(self):
+    target = mock.Mock()
+    @begin.convert(_automatic=True)
+    def func(number=0L):
+        target(number)
+    func('1')
+    self.assertIsInstance(target.call_args[0][0], long)
+    self.assertEqual(target.call_args[0][0], 1)
+""")
+
     def test_automatic_float(self):
         target = mock.Mock()
         @begin.convert(_automatic=True)
