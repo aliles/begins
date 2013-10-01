@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-Next release 0.7
+0.7 (2013-10-01)
 ````````````````
 * New utility functions tofile and tolist
 * Fix bug prevent help output with main function that takes on arguments
