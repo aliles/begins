@@ -13,7 +13,7 @@ try:
 except ImportError:
     from funcsigs import signature
 
-from begin import context, extensions, subcommands
+from begin import context, extensions, subcommands, utils
 
 __all__ = ['create_parser', 'populate_parser',
            'apply_options', 'call_function']
@@ -99,10 +99,16 @@ def populate_parser(parser, defaults, funcsig, short_args, lexical_order):
         if param.kind == param.POSITIONAL_OR_KEYWORD or \
                 param.kind == param.KEYWORD_ONLY or \
                 param.kind == param.POSITIONAL_ONLY:
-            kwargs = {
-                    'default': defaults.from_param(param),
-                    'metavar': defaults.metavar(param.name),
-            }
+            kwargs = {'default': defaults.from_param(param)}
+            if isinstance(param.default, bool):
+                if not isinstance(kwargs['default'], bool):
+                    kwargs['default'] = utils.tobool(kwargs['default'])
+                if kwargs['default']:
+                    kwargs['action'] = 'store_false'
+                else:
+                    kwargs['action'] = 'store_true'
+            else:
+                kwargs['metavar'] = defaults.metavar(param.name)
             if param.annotation is not param.empty:
                 kwargs['help'] = param.annotation
             if kwargs['default'] is NODEFAULT:

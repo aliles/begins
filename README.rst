@@ -93,7 +93,7 @@ The ``begin.start()`` function can be
 used as a function call
 or a decorator.
 If called as a function
-it returns True when
+it returns ``True`` when
 called from the ``__main__`` module.
 To do this it inspects
 the stack frame of the caller,
@@ -260,6 +260,34 @@ the command line options as
 instead of the order
 in which the function
 accepts them.
+
+---------------
+Boolean options
+---------------
+
+If a command line option has
+a default value that
+is a ``bool`` object.
+(``True`` or ``False``)
+The command line option
+will be a flag 
+rather than an option
+that accepts a value.
+Providing the flag on
+the command line will
+pass the opposite of
+the default value to
+the function::
+
+    >>> import begin
+    >>> @begin.start
+    ... def main(enable=False, disable=True):
+    ...     pass
+
+Using ``--enable``
+or ``--disable`` when
+invoking this program will
+invert the associated option.
 
 ------------
 Sub-Commands
@@ -522,6 +550,7 @@ The module ``begin.utils`` contains
 useful functions for
 converting argument types.
 
+-----------------
 Automatic casting
 -----------------
 
@@ -558,7 +587,7 @@ the same call to the
 
 Alternatively, use of
 ``begin.convert()`` can be
-dispensed by passing True
+dispensed by passing ``True``
 to ``begin.start()`` via
 the ``auto_convert`` parameter::
 
