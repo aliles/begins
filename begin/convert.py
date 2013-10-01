@@ -14,15 +14,16 @@ __all__ = ['convert']
 
 
 CONVERTERS = {
-        int: int,
-        float: float,
-        bool: utils.tobool,
-        tuple: utils.tolist,
-        list: utils.tolist,
+        int: lambda _: int,
+        float: lambda _: float,
+        bool: lambda _: utils.tobool,
+        tuple: lambda _: utils.tolist,
+        list: lambda _: utils.tolist,
+        type(sys.stdin): lambda src: functools.partial(utils.tofile, mode=src.mode),
 }
 
 if sys.version_info[0] < 3:
-    CONVERTERS[long] = long
+    CONVERTERS[long] = lambda _: long
 
 
 def convert(_automatic=False, **mappings):
@@ -60,7 +61,7 @@ def convert(_automatic=False, **mappings):
                     continue
                 converter = CONVERTERS.get(type(param.default))
                 if converter:
-                    mappings[param.name] = converter
+                    mappings[param.name] = converter(param.default)
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             args = list(args)
