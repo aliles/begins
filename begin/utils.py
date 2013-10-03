@@ -9,6 +9,8 @@ def tobool(value):
     are 'n', 'no', 'f', 'false', 'off', and '0'.  Raises ValueError if
     'value' is anything else.
     """
+    if isinstance(value, bool):
+        return value
     return bool(_tobool(value))
 
 def tolist(value=None, sep=',', empty_strings=False):

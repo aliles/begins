@@ -342,15 +342,17 @@ class TestStart(unittest.TestCase):
         target = mock.Mock()
         try:
             orig_argv= sys.argv
-            sys.argv = orig_argv[:1] + ['-a', '1']
+            sys.argv = orig_argv[:1] + ['-a', '-b', '1', '-c', 'x,y', '-d', '*']
             orig_name = globals()['__name__']
             globals()['__name__'] = "__main__"
             @begin.start(auto_convert=True)
-            def main(a=0):
-                target(a)
+            def main(a=False, b=0, c=(), d=''):
+                target(a, b, c, d)
             self.assertTrue(target.called)
-            self.assertEqual(target.call_args[0], (1,))
-            self.assertIsInstance(target.call_args[0][0], int)
+            self.assertEqual(target.call_args[0], (True, 1, ['x', 'y'], '*'))
+            self.assertIsInstance(target.call_args[0][0], bool)
+            self.assertIsInstance(target.call_args[0][1], int)
+            self.assertIsInstance(target.call_args[0][2], list)
         finally:
             sys.argv = orig_argv
             globals()['__name__'] = orig_name
