@@ -7,3 +7,4 @@ flask
 funcsigs
 mock
 sphinx
+twine
