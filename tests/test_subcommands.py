@@ -70,3 +70,10 @@ class TestSubCommand(unittest.TestCase):
         self.assertIn('named.collector', begin.subcommands.COLLECTORS)
         self.assertIs(function,
                 begin.subcommands.COLLECTORS['named.collector']['function'])
+
+    def test_named_function(self):
+        @begin.subcommand(name='subcmd')
+        def function():
+            pass
+        self.assertIn('subcmd', begin.subcommands.COLLECTORS[None])
+        self.assertNotIn('function', begin.subcommands.COLLECTORS[None])

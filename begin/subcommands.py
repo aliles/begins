@@ -20,14 +20,15 @@ class Collector(dict):
         for func in pkg_resources.iter_entry_points(group=entry_point):
             self.register(func)
 
-    def register(self, func):
-        if func.__name__ in self:
-            msg = "Function named '{0}' already registered".format(func.__name__)
+    def register(self, func, name=None):
+        name = func.__name__ if name is None else name
+        if name in self:
+            msg = "Function named '{0}' already registered".format(name)
             raise ValueError(msg)
-        self[func.__name__] = func
+        self[name] = func
 
 
-def subcommand(func=None, group=None, collector=None):
+def subcommand(func=None, name=None, group=None, collector=None):
     """Register function as a program's subcommand
 
     Functions are registered with the default subcommand collector, unless a
@@ -35,7 +36,7 @@ def subcommand(func=None, group=None, collector=None):
     will automatically be included in the generated command line support.
     """
     def wrapper(func):
-        collector.register(func)
+        collector.register(func, name=name)
         return func
     collector = COLLECTORS[group] if collector is None else collector
     if func is not None:

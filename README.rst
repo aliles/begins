@@ -337,7 +337,20 @@ If a sub-command was chosen
 the associated function will
 also be called.
 
-Sub-commands can be
+It is possible to
+create a sub-command with
+a different name from
+the decorated function's name.
+To do this pass the
+desired sub-command name using
+the ``name`` keyword argument::
+
+    >>> import begin
+    >>> @begin.subcommand(name='colour')                     # doctest: +SKIP
+    ... def question(answer):
+    ...     "What is your favourite colour?"
+
+Sub-commands can also be
 registered with a
 specific named group by
 passing a ``group`` argument to

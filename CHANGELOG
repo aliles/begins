@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+Next release 0.8
+````````````````
+* Enable creating sub-commands with a specified name
+
 0.7.1 (2013-10-03)
 ``````````````````
 * Fix incompatability between automatic type conversion and command line flags
