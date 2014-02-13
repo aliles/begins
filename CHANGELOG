@@ -4,6 +4,7 @@ Changelog
 Next release 0.8
 ````````````````
 * Enable creating sub-commands with a specified name
+* Create positional command line arguments for require parameters
 
 0.7.1 (2013-10-03)
 ``````````````````

@@ -111,16 +111,17 @@ def populate_parser(parser, defaults, funcsig, short_args, lexical_order):
                 kwargs['metavar'] = defaults.metavar(param.name)
             if param.annotation is not param.empty:
                 kwargs['help'] = param.annotation
+            args = []
             if kwargs['default'] is NODEFAULT:
-                kwargs['required'] = True
+                args.append(param.name)
             else:
+                args.append('--' + param.name)
+                if short_args:
+                    args.append('-' + param.name[0])
                 if 'help' not in kwargs:
                     kwargs['help'] = '(default: %(default)s)'
                 else:
                     kwargs['help'] += ' (default: %(default)s)'
-            args = ['--' + param.name]
-            if short_args:
-                args.append('-' + param.name[0])
             parser.add_argument(*args, **kwargs)
         elif param.kind == param.VAR_POSITIONAL:
             kwargs = {'nargs': '*'}
