@@ -8,3 +8,4 @@ funcsigs
 mock
 sphinx
 twine
+wheel
