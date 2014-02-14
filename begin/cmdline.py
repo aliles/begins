@@ -220,7 +220,7 @@ def call_function(func, funcsig, opts):
     return func(*pargs, **kwargs)
 
 
-def apply_options(func, opts, sub_group=None, collector=None):
+def apply_options(func, opts, run_main=True, sub_group=None, collector=None):
     """Apply command line options to function and subcommands
 
     Call the target function, and any chosen subcommands, using the parsed
@@ -232,9 +232,10 @@ def apply_options(func, opts, sub_group=None, collector=None):
         if isinstance(ext, extensions.Extension):
             ext.run(opts)
         ext = getattr(ext, '__wrapped__')
-    return_value = call_function(func, signature(ext), opts)
-    if return_value is not None:
-        context.return_value = return_value
+    if run_main:
+        return_value = call_function(func, signature(ext), opts)
+        if return_value is not None:
+            context.return_value = return_value
     if hasattr(opts, '_subcommand'):
         subfunc = collector.get(opts._subcommand)
         return_value = call_function(subfunc, signature(subfunc), opts)

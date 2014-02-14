@@ -47,12 +47,13 @@ class Program(Wrapping):
         context.return_value = None
         context.opts_previous = tuple()
         context.opts_next = tuple(options)
-        for opts in options:
+        for count, opts in enumerate(options):
             context.opts_next = context.opts_next[1:]
             context.opts_current = opts
             try:
                 context.return_value = cmdline.apply_options(self.__wrapped__,
-                        opts, sub_group=self._group, collector=self._collector)
+                        opts, run_main=(count==0), sub_group=self._group,
+                        collector=self._collector)
             except KeyboardInterrupt:
                 sys.exit(1)
             context.opts_previous = context.opts_previous + (opts,)

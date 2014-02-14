@@ -229,6 +229,7 @@ class TestStart(unittest.TestCase):
             globals()['__name__'] = orig_name
 
     def test_multiple_subcommand(self):
+        init = mock.Mock()
         target = mock.Mock()
         try:
             orig_argv= sys.argv
@@ -240,7 +241,8 @@ class TestStart(unittest.TestCase):
                 target()
             @begin.start(cmd_delim='--')
             def main():
-                pass
+                init()
+            self.assertEqual(init.call_count, 1)
             self.assertEqual(target.call_count, 3)
         finally:
             sys.argv = orig_argv
