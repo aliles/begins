@@ -136,7 +136,7 @@ def populate_parser(parser, defaults, funcsig, short_args, lexical_order):
 
 def create_parser(func, env_prefix=None, config_file=None, config_section=None,
         short_args=True, lexical_order=False, sub_group=None, plugins=None,
-        collector=None):
+        collector=None, formatter_class=argparse.HelpFormatter):
     """Create and OptionParser object from a function definition.
 
     Use the function's signature to generate an OptionParser object. Default
@@ -152,7 +152,8 @@ def create_parser(func, env_prefix=None, config_file=None, config_section=None,
             prog=program_name(sys.argv[0], func),
             argument_default=NODEFAULT,
             conflict_handler='resolve',
-            description = func.__doc__
+            description = func.__doc__,
+            formatter_class=formatter_class
     )
     collector = collector if collector is not None else subcommands.COLLECTORS[sub_group]
     if plugins is not None:
