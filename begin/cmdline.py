@@ -167,7 +167,8 @@ def create_parser(func, env_prefix=None, config_file=None, config_section=None,
             if subfunc.__doc__ is not None:
                 help = subfunc.__doc__.splitlines()[0]
             subparser = subparsers.add_parser(subfunc.__name__, help=help,
-                    conflict_handler='resolve', description=subfunc.__doc__)
+                    conflict_handler='resolve', description=subfunc.__doc__,
+                    formatter_class=formatter_class)
             defaults.set_config_section(subfunc.__name__)
             populate_parser(subparser, defaults, funcsig, short_args, lexical_order)
     have_extensions = False
