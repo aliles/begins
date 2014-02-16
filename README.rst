@@ -764,6 +764,49 @@ are used.
 Options are expected to
 be in a ``logging`` section.
 
+-----------------------
+Command Line Formatting
+-----------------------
+
+The default `argparse`_ help formatter
+may not always meet your needs.
+An alternate formatter
+can be provided using the
+``formatter_class`` argument
+to ``begin.start()``::
+
+    >>> import begin, argparse
+    >>> @begin.start(formatter_class=argparse.RawTextHelpFormatter)
+    ... def main():
+    ...     pass
+
+Any of the `formatter classes`_
+provided by the argparse module
+can be used.
+
+Alternatively, ``begin.formatters`` provides
+a mechanism to compose
+new formatter class according
+to your requirements.::
+
+    >>> from begin import formatters
+    >>> formatter_class = formatters.compose(formatters.RawDescription, formatters.RawArguments)
+
+The following mixin classes
+are provided for use with
+``begin.formatters.compose()``
+
+* RawDescription
+* RawArguments
+* ArgumentDefaults
+* RemoveSubcommandsLine
+
+One or more of
+these may be passed to
+``begin.formatters.compose()``
+to create a new
+formatter class.
+
 ------------
 Entry Points
 ------------
@@ -817,6 +860,7 @@ be made using GitHub' `issues system`_.
 .. _entry points: http://peak.telecommunity.com/DevCenter/setuptools#dynamic-discovery-of-services-and-plugins
 .. _funcsigs: https://pypi.python.org/pypi/funcsigs
 .. _function annotations: http://www.python.org/dev/peps/pep-3107/
+.. _formatter classes: http://docs.python.org/dev/library/argparse.html#formatter-class
 .. _setuptools: https://pypi.python.org/pypi/setuptools
 .. _sub-commands: http://docs.python.org/dev/library/argparse.html#sub-commands
 

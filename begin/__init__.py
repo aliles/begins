@@ -9,6 +9,7 @@ from begin.version import __version__
 from begin.extensions import tracebacks
 from begin.extensions import logger as logging
 
+import begin.formatters
 import begin.utils
 
 __all__ = ['start']
