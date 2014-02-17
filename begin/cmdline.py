@@ -115,7 +115,7 @@ def populate_parser(parser, defaults, funcsig, short_args, lexical_order):
             if kwargs['default'] is NODEFAULT:
                 args.append(param.name)
             else:
-                args.append('--' + param.name)
+                args.append('--' + param.name.replace('_', '-'))
                 if short_args:
                     args.append('-' + param.name[0])
                 if 'help' not in kwargs:
