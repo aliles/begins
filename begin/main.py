@@ -44,21 +44,17 @@ class Program(Wrapping):
         for command in commands:
             opts = self._parser.parse_args(command)
             options.append(opts)
-        context.return_value = None
-        context.opts_previous = tuple()
+        context.clear()
         context.opts_next = tuple(options)
         for count, opts in enumerate(options):
             context.opts_next = context.opts_next[1:]
             context.opts_current = opts
-            try:
-                context.return_value = cmdline.apply_options(self.__wrapped__,
-                        opts, run_main=(count==0), sub_group=self._group,
-                        collector=self._collector)
-            except KeyboardInterrupt:
-                sys.exit(1)
-            context.opts_previous = context.opts_previous + (opts,)
+            cmdline.apply_options(self.__wrapped__, opts,
+                    run_main=(count==0), sub_group=self._group,
+                    collector=self._collector)
+            context.opts_previous += (opts,)
         context.opts_current = None
-        return context.return_value
+        return context.last_return
 
 
 def start(func=None, **kwargs):
@@ -115,7 +111,10 @@ def start(func=None, **kwargs):
     def _start(func):
         prog = Program(func, **kwargs)
         if func.__module__ == '__main__':
-            prog.start()
+            try:
+                prog.start()
+            except KeyboardInterrupt:
+                sys.exit(1)
         return prog
 
     # start() is a decorator factory

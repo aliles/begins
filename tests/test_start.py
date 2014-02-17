@@ -314,26 +314,26 @@ class TestStart(unittest.TestCase):
             globals()['__name__'] = "__main__"
             @begin.subcommand
             def one():
-                self.assertIs(begin.context.return_value, None)
+                self.assertIs(begin.context.last_return, None)
                 self.assertEqual(len(begin.context.opts_previous), 0)
                 self.assertEqual(len(begin.context.opts_next), 2)
                 return 1
             @begin.subcommand
             def two():
-                self.assertEqual(begin.context.return_value, 1)
+                self.assertEqual(begin.context.last_return, 1)
                 self.assertEqual(len(begin.context.opts_previous), 1)
                 self.assertEqual(len(begin.context.opts_next), 1)
                 return 2
             @begin.subcommand
             def three():
-                self.assertEqual(begin.context.return_value, 2)
+                self.assertEqual(begin.context.last_return, 2)
                 self.assertEqual(len(begin.context.opts_previous), 2)
                 self.assertEqual(len(begin.context.opts_next), 0)
                 return 3
             @begin.start(cmd_delim='--')
             def main():
                 pass
-            self.assertEqual(begin.context.return_value, 3)
+            self.assertEqual(begin.context.last_return, 3)
             self.assertEqual(len(begin.context.opts_previous), 3)
             self.assertEqual(len(begin.context.opts_next), 0)
         finally:

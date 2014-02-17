@@ -421,21 +421,29 @@ the ``begin.context`` object.
 This object will have the
 following properties:
 
-* ``return_value``, value returned by previous command function.
+* ``last_return``, value returned by previous command function.
+* ``return_values``, iterable of all return values from previous commands.
 * ``opts_previous``, iterable of options object used by previous commands.
 * ``opts_current``, options object for current command.
 * ``opts_next``, iterable of options object for following commands.
+* **(deprecated)** ``return_value``, replaced by ``last_return``.
 
 Any other properties set
 on the ``begin.context`` object
 will not be altered by begins.
 
-The ``return_value`` property
-will be set if the
-value returned from a
+The ``last_return`` property
+and ``return_values`` will
+always be populated,
+even in the value
+returned from the
 main function or
-sub-command function is
-not the ``None`` object.
+a sub-command function is
+the ``None`` object.
+The length and order of
+the ``return_values`` will
+match those of
+``opts_previous``.
 
 ---------------------
 Environment Variables

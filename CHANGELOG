@@ -7,6 +7,8 @@ Next release 0.8
 * Create positional command line arguments for require parameters
 * Published Python wheel packages to PyPI to improve install times
 * Custom help formatters for control command line help output
+* Deprecate context.return_value for context.last_return and
+  context.return_values
 
 0.7.1 (2013-10-03)
 ``````````````````

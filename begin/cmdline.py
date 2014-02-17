@@ -233,12 +233,12 @@ def apply_options(func, opts, run_main=True, sub_group=None, collector=None):
             ext.run(opts)
         ext = getattr(ext, '__wrapped__')
     if run_main:
-        return_value = call_function(func, signature(ext), opts)
-        if return_value is not None:
-            context.return_value = return_value
+        with context:
+            return_value = call_function(func, signature(ext), opts)
+        context.return_values += (return_value,)
     if hasattr(opts, '_subcommand'):
         subfunc = collector.get(opts._subcommand)
-        return_value = call_function(subfunc, signature(subfunc), opts)
-        if return_value is not None:
-            context.return_value = return_value
-    return context.return_value
+        with context:
+            return_value = call_function(subfunc, signature(subfunc), opts)
+        context.return_values += (return_value,)
+    return context.last_return
