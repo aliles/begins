@@ -344,7 +344,7 @@ class TestStart(unittest.TestCase):
         target = mock.Mock()
         try:
             orig_argv= sys.argv
-            sys.argv = orig_argv[:1] + ['-a', '-b', '1', '-c', 'x,y', '-d', '*']
+            sys.argv = orig_argv[:1] + ['--a', '-b', '1', '-c', 'x,y', '-d', '*']
             orig_name = globals()['__name__']
             globals()['__name__'] = "__main__"
             @begin.start(auto_convert=True)

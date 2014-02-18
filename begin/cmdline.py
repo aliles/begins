@@ -85,6 +85,42 @@ def program_name(filename, func):
     return func.__name__
 
 
+def populate_flag(parser, param, defaults):
+    """Add a flag option to the parser"""
+    default = defaults.from_param(param)
+    if not isinstance(default, bool):
+        default = utils.tobool(default)
+    help = ''
+    if param.annotation is not param.empty:
+        help = param.annotation + ' '
+    parser.add_argument('--' + param.name.replace('_', '-'),
+            action='store_true', default=default,
+            help=(help + '(default: %(default)s)'if not default else ''))
+    parser.add_argument('--no-' + param.name.replace('_', '-'),
+            action='store_false', default=default,
+            help=(help + '(default: %(default)s)' if default else ''))
+
+
+def populate_option(parser, param, defaults, short_args):
+    """Add a regulre option to the parser"""
+    kwargs = {'default': defaults.from_param(param)}
+    kwargs['metavar'] = defaults.metavar(param.name)
+    if param.annotation is not param.empty:
+        kwargs['help'] = param.annotation
+    args = []
+    if kwargs['default'] is NODEFAULT:
+        args.append(param.name)
+    else:
+        args.append('--' + param.name.replace('_', '-'))
+        if short_args:
+            args.append('-' + param.name[0])
+        if 'help' not in kwargs:
+            kwargs['help'] = '(default: %(default)s)'
+        else:
+            kwargs['help'] += ' (default: %(default)s)'
+    parser.add_argument(*args, **kwargs)
+
+
 def populate_parser(parser, defaults, funcsig, short_args, lexical_order):
     """Populate parser according to function signature
 
@@ -99,30 +135,10 @@ def populate_parser(parser, defaults, funcsig, short_args, lexical_order):
         if param.kind == param.POSITIONAL_OR_KEYWORD or \
                 param.kind == param.KEYWORD_ONLY or \
                 param.kind == param.POSITIONAL_ONLY:
-            kwargs = {'default': defaults.from_param(param)}
             if isinstance(param.default, bool):
-                if not isinstance(kwargs['default'], bool):
-                    kwargs['default'] = utils.tobool(kwargs['default'])
-                if kwargs['default']:
-                    kwargs['action'] = 'store_false'
-                else:
-                    kwargs['action'] = 'store_true'
+                populate_flag(parser, param, defaults)
             else:
-                kwargs['metavar'] = defaults.metavar(param.name)
-            if param.annotation is not param.empty:
-                kwargs['help'] = param.annotation
-            args = []
-            if kwargs['default'] is NODEFAULT:
-                args.append(param.name)
-            else:
-                args.append('--' + param.name.replace('_', '-'))
-                if short_args:
-                    args.append('-' + param.name[0])
-                if 'help' not in kwargs:
-                    kwargs['help'] = '(default: %(default)s)'
-                else:
-                    kwargs['help'] += ' (default: %(default)s)'
-            parser.add_argument(*args, **kwargs)
+                populate_option(parser, param, defaults, short_args)
         elif param.kind == param.VAR_POSITIONAL:
             kwargs = {'nargs': '*'}
             if param.annotation is not param.empty:

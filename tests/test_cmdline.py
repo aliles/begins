@@ -92,11 +92,13 @@ class TestCreateParser(unittest.TestCase):
     if sys.version_info[0] > 2:
         exec("""
 def test_positional_with_annotation(self):
-    def main(opt:'help string'):
+    def main(opt:'help string', flag:'flagged'=True):
         pass
     parser = cmdline.create_parser(main)
-    self.assertEqual(len(parser._optionals._actions), 2)
+    self.assertEqual(len(parser._optionals._actions), 4)
     self.assertEqual(parser._optionals._actions[1].help, 'help string')
+    self.assertEqual(parser._optionals._actions[2].help, '')
+    self.assertTrue(parser._optionals._actions[3].help.startswith('flagged'))
 
 def test_positional_with_annotation_and_default(self):
     def main(opt:'help string'='default'):
@@ -133,14 +135,15 @@ def test_variable_positional_with_annotation(self):
             os.environ = original
 
     def test_env_prefixes(self):
-        def main(one, two):
+        def main(one, two, three=True):
             pass
         try:
             original = os.environ
-            os.environ = {'X_ONE': 1, 'TWO': 2}
+            os.environ = {'X_ONE': 1, 'TWO': 2, 'X_THREE': 'no'}
             parser = cmdline.create_parser(main, env_prefix='X_')
             self.assertEqual(parser._optionals._actions[1].default, 1)
             self.assertIs(parser._optionals._actions[2].default, cmdline.NODEFAULT)
+            self.assertIs(parser._optionals._actions[3].default, False)
         finally:
             os.environ = original
 
