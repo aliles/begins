@@ -4,11 +4,11 @@ Changelog
 Next release 0.8
 ````````````````
 * Boolean flags create both '--opt' and '--no-opt' command line options
-* Enable creating sub-commands with a specified name
-* Create positional command line arguments for require parameters
-* Published Python wheel packages to PyPI to improve install times
-* Custom help formatters for control command line help output
 * Replace '_' with '-' in command line option flags
+* Enable creating sub-commands with a specified name
+* Custom help formatters for control command line help output
+* Create positional command line arguments for required parameters
+* Published Python wheel packages to PyPI to improve install times
 * Deprecate context.return_value for context.last_return and
   context.return_values
 
