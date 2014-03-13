@@ -88,18 +88,18 @@ class TestCreateParser(unittest.TestCase):
             pass
         parser = cmdline.create_parser(main)
         self.assertIs(parser._optionals._actions[1].default, True)
-        self.assertEquals(parser._optionals._actions[1].dest, 'flag')
+        self.assertEqual(parser._optionals._actions[1].dest, 'flag')
         self.assertIs(parser._optionals._actions[2].default, True)
-        self.assertEquals(parser._optionals._actions[2].dest, 'flag')
+        self.assertEqual(parser._optionals._actions[2].dest, 'flag')
 
     def test_false_flag(self):
         def main(flag=False):
             pass
         parser = cmdline.create_parser(main)
         self.assertIs(parser._optionals._actions[1].default, False)
-        self.assertEquals(parser._optionals._actions[1].dest, 'flag')
+        self.assertEqual(parser._optionals._actions[1].dest, 'flag')
         self.assertIs(parser._optionals._actions[2].default, False)
-        self.assertEquals(parser._optionals._actions[2].dest, 'flag')
+        self.assertEqual(parser._optionals._actions[2].dest, 'flag')
 
     def test_function_description(self):
         def main(a):
