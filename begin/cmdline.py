@@ -94,10 +94,10 @@ def populate_flag(parser, param, defaults):
     if param.annotation is not param.empty:
         help = param.annotation + ' '
     parser.add_argument('--' + param.name.replace('_', '-'),
-            action='store_true', default=default,
+            action='store_true', default=default, dest=param.name,
             help=(help + '(default: %(default)s)'if not default else ''))
     parser.add_argument('--no-' + param.name.replace('_', '-'),
-            action='store_false', default=default,
+            action='store_false', default=default, dest=param.name,
             help=(help + '(default: %(default)s)' if default else ''))
 
 

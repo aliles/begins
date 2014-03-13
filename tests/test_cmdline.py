@@ -83,6 +83,24 @@ class TestCreateParser(unittest.TestCase):
         parser = cmdline.create_parser(main)
         self.assertIn('variable_arguments', parser.format_help())
 
+    def test_true_flag(self):
+        def main(flag=True):
+            pass
+        parser = cmdline.create_parser(main)
+        self.assertIs(parser._optionals._actions[1].default, True)
+        self.assertEquals(parser._optionals._actions[1].dest, 'flag')
+        self.assertIs(parser._optionals._actions[2].default, True)
+        self.assertEquals(parser._optionals._actions[2].dest, 'flag')
+
+    def test_false_flag(self):
+        def main(flag=False):
+            pass
+        parser = cmdline.create_parser(main)
+        self.assertIs(parser._optionals._actions[1].default, False)
+        self.assertEquals(parser._optionals._actions[1].dest, 'flag')
+        self.assertIs(parser._optionals._actions[2].default, False)
+        self.assertEquals(parser._optionals._actions[2].dest, 'flag')
+
     def test_function_description(self):
         def main(a):
             'program description'
