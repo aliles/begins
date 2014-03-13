@@ -270,14 +270,15 @@ a default value that
 is a ``bool`` object.
 (``True`` or ``False``)
 The command line option
-will be a flag 
+will be flags
 rather than an option
 that accepts a value.
-Providing the flag on
-the command line will
-pass the opposite of
-the default value to
-the function::
+Two flags are generated,
+one to set a ``True`` value and
+one to set a ``False`` value.
+The two commands will be of
+the form ``--flag`` and ``--no-flag``.
+For example::
 
     >>> import begin
     >>> @begin.start
@@ -285,9 +286,12 @@ the function::
     ...     pass
 
 Using ``--enable``
-or ``--disable`` when
+or ``--no-disable`` when
 invoking this program will
 invert the associated option.
+The options ``--no-enable``
+and ``--disable``
+have not effect.
 
 ------------
 Sub-Commands
