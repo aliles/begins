@@ -44,12 +44,18 @@ class SwizzleContext(object):
 class MutableContext(SwizzleContext):
     """Mutable context object
 
-    All properties may be assigned to. Constructor ensures all protected
-    properties are initialised correctly.
+    Only protected properties may be assigned to. Constructor ensures all
+    protected properties are initialised correctly.
     """
 
     def __init__(self):
         self.clear()
+
+    def __setattr__(self, name, value):
+        if not name.startswith('__') and name not in self._protected:
+            msg = "attempt to assign value to to immutable attribute '{0}'".format(name)
+            raise AttributeError(msg)
+        object.__setattr__(self, name, value)
 
     def clear(self):
         for name in self._protected:

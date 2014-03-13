@@ -43,3 +43,6 @@ class TestContext(unittest.TestCase):
                 if name.startswith('_'):
                     continue
                 self.assertRaises(AttributeError, setattr, context, name, None)
+
+    def test_protected(self):
+        self.assertRaises(AttributeError, setattr, context, 'alpha', None)
