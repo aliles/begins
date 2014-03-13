@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-Next release 0.8
+0.8 (2014-03-13)
 ````````````````
 * Boolean flags create both '--opt' and '--no-opt' command line options
 * Replace '_' with '-' in command line option flags
