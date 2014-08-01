@@ -53,7 +53,7 @@ def convert(_automatic=False, **mappings):
     def decorator(func):
         target = func
         while hasattr(target, '__wrapped__'):
-            target = getattr(func, '__wrapped__')
+            target = getattr(target, '__wrapped__')
         sig = signature(target)
         if _automatic:
             for param in sig.parameters.values():
@@ -90,7 +90,7 @@ def convert(_automatic=False, **mappings):
                     msg = 'Variable length keyword arguments not supported'
                     raise ValueError(msg)
             return func(*args, **kwargs)
-        if not hasattr(wrapper, '__wrapped__'):
-            wrapper.__wrapped__ = func
+        # do not skipping decorators when unwinding wrapping
+        wrapper.__wrapped__ = func
         return wrapper
     return decorator

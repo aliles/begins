@@ -359,6 +359,23 @@ class TestStart(unittest.TestCase):
             sys.argv = orig_argv
             globals()['__name__'] = orig_name
 
+    @mock.patch('logging.getLogger')
+    def test_convert_with_logging(self, getlogger):
+        target = mock.Mock()
+        try:
+            orig_argv= sys.argv
+            sys.argv = orig_argv[:1]
+            orig_name = globals()['__name__']
+            globals()['__name__'] = "__main__"
+            @begin.start(auto_convert=True)
+            @begin.logging
+            def main():
+                target()
+            self.assertTrue(getlogger.called)
+        finally:
+            sys.argv = orig_argv
+            globals()['__name__'] = orig_name
+
 
 if __name__ == '__main__':
     unittest.begin()
