@@ -7,7 +7,7 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello World!'
 
-@begin.start(env_prefix='WEB_')
-@begin.convert(port=int, debug=begin.utils.tobool)
+@begin.start(auto_convert=True, env_prefix='WEB_')
+@begin.logging
 def main(host='127.0.0.1', port=8080, debug=False):
     app.run(host=host, port=port, debug=debug)
