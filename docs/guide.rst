@@ -1,3 +1,5 @@
+.. _guide:
+
 =====================
 Guide to using begins
 =====================
@@ -11,8 +13,6 @@ Command line programs for *lazy* humans.
 * Decorate a function to be your programs starting point.
 * Generate command line parser based on function signature.
 * Search system environment for option default values.
-
-|pypi_version| |build_status| |coverage|
 
 -----------
 Why begins?
@@ -862,7 +862,7 @@ Issues
 
 Any bug reports or
 feature requests can
-be made using GitHub' `issues system`_.
+be made using Github's `issues system`_.
 
 .. _Github: https://github.com/aliles/begins
 .. _Python: http://python.org
@@ -877,15 +877,3 @@ be made using GitHub' `issues system`_.
 .. _formatter classes: http://docs.python.org/dev/library/argparse.html#formatter-class
 .. _setuptools: https://pypi.python.org/pypi/setuptools
 .. _sub-commands: http://docs.python.org/dev/library/argparse.html#sub-commands
-
-.. |build_status| image:: https://secure.travis-ci.org/aliles/begins.png?branch=master
-   :target: https://travis-ci.org/aliles/begins
-   :alt: Current build status
-
-.. |coverage| image:: https://coveralls.io/repos/aliles/begins/badge.png?branch=master
-   :target: https://coveralls.io/r/aliles/begins?branch=master
-   :alt: Latest PyPI version
-
-.. |pypi_version| image:: https://pypip.in/v/begins/badge.png
-   :target: https://crate.io/packages/begins/
-   :alt: Latest PyPI version

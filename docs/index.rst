@@ -35,15 +35,15 @@ for both Python2 and Python3.
 
 .. code-block:: python
 
-    from __future__ import print_function
     import begin
+    import logging
 
     @begin.start(auto_convert=True)
     @begin.logging
-    def run(host='127.0.0.1', port=8080, debug=False):
-        if debug:
-            print("debugging")
-        print("{0:s}:{1:d}".format(host, port))
+    def run(host='127.0.0.1', port=8080, noop=False):
+        if noop:
+            return
+        logging.info("%s:%d", host, port)
 
 ========
 Features
@@ -56,19 +56,18 @@ Features
 * Use environment variables and command line files to set defaults.
 * Pre-packaged to extensions to simplify common tasks.
 
-=================
-Table of Contents
-=================
+======
+Issues
+======
+
+If you encounter problems,
+please refer to :ref:`issues`
+from the guide.
 
 .. toctree::
+   :hidden:
    :maxdepth: 1
 
    tutorial
    guide
    api
-
-======
-Issues
-======
-
-If you encounter problems, please refer to :ref:`issues` from the guide.
