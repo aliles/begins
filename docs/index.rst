@@ -56,6 +56,18 @@ Features
 * Use environment variables and command line files to set defaults.
 * Pre-packaged to extensions to simplify common tasks.
 
+=================
+Table of Contents
+=================
+
+
+.. toctree::
+   :maxdepth: 1
+
+   tutorial
+   guide
+   api
+
 ======
 Issues
 ======
@@ -63,11 +75,3 @@ Issues
 If you encounter problems,
 please refer to :ref:`issues`
 from the guide.
-
-.. toctree::
-   :hidden:
-   :maxdepth: 1
-
-   tutorial
-   guide
-   api
