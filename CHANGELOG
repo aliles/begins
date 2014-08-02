@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+0.9 (2014-08-02)
+````````````````
+* First beta release
+* Sphinx documentation available on Read The Docs
+* Fix compatability between extension and convert decorators
+
 0.8 (2014-03-13)
 ````````````````
 * Boolean flags create both '--opt' and '--no-opt' command line options
