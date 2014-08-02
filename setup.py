@@ -32,7 +32,7 @@ setup(
     long_description=open('README.rst').read(),
     license="ASL",
     classifiers = [
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: MacOS :: MacOS X',
