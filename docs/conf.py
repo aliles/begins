@@ -14,6 +14,16 @@
 
 import sys, os
 
+# Import mock object for mocking out modules from external dependencies
+try:
+    from mock import MagicMock as Mock
+except ImportError:
+    from unittest.mock import MagicMock as Mock
+
+# Mock out modules from external package dependencies
+MOCK_MODULES = ['funcsigs']
+sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
