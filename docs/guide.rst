@@ -730,7 +730,7 @@ an additional argument group::
 
      --loglvl {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                            Set explicit log level
-     --logfile LOGFILE     Ouput log messages to file
+     --logfile LOGFILE     Output log messages to file
      --logfmt LOGFMT       Log message format
 
 The logging level

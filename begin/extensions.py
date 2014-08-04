@@ -81,7 +81,7 @@ class Logging(Extension):
         group.add_argument('--logfile',
                 default=defaults.from_name(
                     'file', section=self.section, default=None),
-                help='Ouput log messages to file')
+                help='Output log messages to file')
         group.add_argument('--logfmt',
                 default=defaults.from_name(
                     'format', section=self.section, default=None),
