@@ -29,7 +29,7 @@ in each of these
 small programs both
 breaks my train of thought
 and greatly increases the
-volume of code I am writting.
+volume of code I am writing.
 
 Begins was implemented to
 remove the boilerplate code
@@ -150,7 +150,7 @@ those parameters::
 
     >>> import begin
     >>> @begin.start
-    ... def run(name='Arther', quest='Holy Grail', colour='blue', *knights):
+    ... def run(name='Arthur', quest='Holy Grail', colour='blue', *knights):
     ...     "tis but a scratch!"
 
 The decorated function above
@@ -167,13 +167,13 @@ command line help::
 
    optional arguments:
      -h, --help            show this help message and exit
-     -n NAME, --name NAME  (default: Arther)
+     -n NAME, --name NAME  (default: Arthur)
      -q QUEST, --quest QUEST
                            (default: Holy Grail)
      -c COLOUR, --colour COLOUR
                            (default: blue)
 
-In Python3, any `function annotations`_
+In Python 3, any `function annotations`_
 for a parameter become
 the command line option help.
 For example::
@@ -234,7 +234,7 @@ the ``begin.start`` decorator::
 
     >>> import begin
     >>> @begin.start(short_args=False)
-    ... def run(name='Arther', quest='Holy Grail', colour='blue', *knights):
+    ... def run(name='Arthur', quest='Holy Grail', colour='blue', *knights):
     ...     "tis but a scratch!"
 
 This program will not
@@ -278,7 +278,7 @@ Issues
 
 Any bug reports or
 feature requests can
-be made using GitHub' `issues system`_.
+be made using GitHub's `issues system`_.
 
 .. _Github: https://github.com/aliles/begins
 .. _Read The Docs: http://begins.readthedocs.org
