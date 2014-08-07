@@ -29,7 +29,7 @@ in each of these
 small programs both
 breaks my train of thought
 and greatly increases the
-volume of code I am writting.
+volume of code I am writing.
 
 Begins was implemented to
 remove the boilerplate code
@@ -150,7 +150,7 @@ those parameters::
 
     >>> import begin
     >>> @begin.start
-    ... def run(name='Arther', quest='Holy Grail', colour='blue', *knights):
+    ... def run(name='Arthur', quest='Holy Grail', colour='blue', *knights):
     ...     "tis but a scratch!"
 
 The decorated function above
@@ -167,7 +167,7 @@ command line help::
 
    optional arguments:
      -h, --help            show this help message and exit
-     -n NAME, --name NAME  (default: Arther)
+     -n NAME, --name NAME  (default: Arthur)
      -q QUEST, --quest QUEST
                            (default: Holy Grail)
      -c COLOUR, --colour COLOUR
@@ -234,7 +234,7 @@ the ``begin.start`` decorator::
 
     >>> import begin
     >>> @begin.start(short_args=False)
-    ... def run(name='Arther', quest='Holy Grail', colour='blue', *knights):
+    ... def run(name='Arthur', quest='Holy Grail', colour='blue', *knights):
     ...     "tis but a scratch!"
 
 This program will not
@@ -464,7 +464,7 @@ the ``env_prefix`` parameter::
 
     >>> import begin
     >>> @begin.start(env_prefix='MP_')
-    ... def run(name='Arther', quest='Holy Grail', colour='blue', *knights):
+    ... def run(name='Arthur', quest='Holy Grail', colour='blue', *knights):
     ...     "tis but a scratch!"
 
 In the example above,
@@ -494,7 +494,7 @@ the ``config_file`` parameter::
 
     >>> import begin
     >>> @begin.start(config_file='.camelot.cfg')
-    ... def run(name='Arther', quest='Holy Grail', colour='blue', *knights):
+    ... def run(name='Arthur', quest='Holy Grail', colour='blue', *knights):
     ...     "tis but a scratch!"
 
 This example will
@@ -517,7 +517,7 @@ parameter to ``begin.start()``::
 
     >>> import begin
     >>> @begin.start(config_file='.camelot.cfg', config_section='camelot')
-    ... def run(name='Arther', quest='Holy Grail', colour='blue', *knights):
+    ... def run(name='Arthur', quest='Holy Grail', colour='blue', *knights):
     ...     "tis but a scratch!"
 
 In this second example
@@ -852,7 +852,7 @@ Use of the ``start()`` method is
 required because the
 main function is not
 called from the ``__main__`` module
-by the entryp points system.
+by the entry points system.
 
 .. _issues:
 

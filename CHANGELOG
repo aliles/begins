@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+1.0 (Unreleased)
+````````````````
+* Ensure mock package gets installed on testing.
+
 0.9 (2014-08-02)
 ````````````````
 * First beta release
